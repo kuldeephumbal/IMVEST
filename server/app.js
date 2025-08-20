@@ -12,6 +12,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+const requestContext = require('./middleware/requestContext');
+app.use(requestContext);
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads', {
@@ -26,6 +28,10 @@ app.use('/uploads', express.static('uploads', {
 connectDB();
 
 // Routes
+const adminRoutes = require('./routes/admin');
+const auditRoutes = require('./routes/audit');
+app.use('/api/admin', adminRoutes);
+app.use('/api/audit', auditRoutes);
 
 // Start the server
 const PORT = 5000;
