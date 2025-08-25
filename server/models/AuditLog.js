@@ -22,6 +22,12 @@ const auditLogSchema = new mongoose.Schema({
 
   message: { type: String },
   metadata: { type: mongoose.Schema.Types.Mixed }, // keep light; avoid sensitive data
+  
+  // Additional audit fields
+  userRole: { type: String, default: 'anonymous' },
+  apiType: { type: String, enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'UNKNOWN'] },
+  apiStatus: { type: String, enum: ['success', 'failure'] },
+  timestamp: { type: Date, default: Date.now },
 }, {
   timestamps: true,
 });

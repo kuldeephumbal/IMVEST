@@ -30,8 +30,12 @@ connectDB();
 // Routes
 const adminRoutes = require('./routes/admin');
 const auditRoutes = require('./routes/audit');
+const clientRoutes = require('./routes/client');
+const transactionRoutes = require('./routes/transactions');
 app.use('/api/admin', adminRoutes);
 app.use('/api/audit', auditRoutes);
+app.use('/api/client', clientRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 // Start the server
 const PORT = 5000;

@@ -33,6 +33,12 @@ async function writeAuditLog(req, { action, status, message, target, metadata, a
       requestId: context.requestId,
       message,
       metadata,
+      // Additional audit fields
+      userRole: actor?.role || 'anonymous',
+      apiType: req?.method || 'UNKNOWN',
+      apiStatus: status,
+      timestamp: new Date(),
+      requestId: context.requestId || `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     });
   } catch (err) {
     // Do not throw; avoid breaking request flow due to logging errors
