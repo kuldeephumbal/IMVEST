@@ -1,27 +1,30 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const nodemailer = require('nodemailer');
 
-// Configure email transporter (you'll need to   set up your email credentials)
+
+// Configure email transporter with Gmail App Password
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // or your email service
+  service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER || 'your-email@gmail.com',
-    pass: process.env.EMAIL_PASSWORD || 'your-app-password'
-  }
+    user: process.env.EMAIL_USER ,
+    pass: process.env.EMAIL_PASSWORD // This should be your Gmail App Password, not regular password
+  },
+  secure: true,
+  port: 465
 });
 
-// Send OTP email (for testing - returns OTP in response)
+// Send OTP email
 async function sendOTPEmail(email, otp, userType, userName) {
   try {
-    // For testing purposes, we'll simulate email sending
-    console.log(`📧 [TEST MODE] OTP Email would be sent to: ${email}`);
-    console.log(`📧 [TEST MODE] OTP Code: ${otp}`);
-    console.log(`📧 [TEST MODE] User Type: ${userType}`);
-    console.log(`📧 [TEST MODE] User Name: ${userName}`);
-    
-    // In production, uncomment the email sending code below
-    /*
+    // Check if email credentials are configured
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      console.log(`📧 [CONFIG ERROR] Email credentials not configured. OTP: ${otp}`);
+      return false;
+    }
+
     const mailOptions = {
-      from: process.env.EMAIL_USER || 'noreply@imvest.com',
+      from: process.env.EMAIL_USER,
       to: email,
       subject: 'IMVEST - Password Reset OTP',
       html: `
@@ -69,9 +72,7 @@ async function sendOTPEmail(email, otp, userType, userName) {
     };
 
     const result = await transporter.sendMail(mailOptions);
-    console.log('OTP email sent successfully:', result.messageId);
-    */
-    
+    console.log('📧 OTP email sent successfully:', result.messageId);
     return true;
   } catch (error) {
     console.error('Error sending OTP email:', error);

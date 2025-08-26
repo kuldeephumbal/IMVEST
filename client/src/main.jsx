@@ -10,23 +10,26 @@ import Users from './pages/Users';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
+import { ToastProvider } from './contexts/ToastContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/*" element={<App>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="*" element={<div>Page Not Found</div>} />
-          </Routes>
-        </App>} />
-      </Routes>
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/*" element={<App>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="*" element={<div>Page Not Found</div>} />
+            </Routes>
+          </App>} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   </StrictMode>
 );
