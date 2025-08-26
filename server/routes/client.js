@@ -66,4 +66,40 @@ router.post('/:clientId/approve', adminAuth, requirePermission('approve_clients'
 router.post('/login', clientController.login);
 router.get('/me/overview', clientAuth, clientController.getOverview);
 
+// ============================================================================
+// CLIENT DASHBOARD - PROFILE MANAGEMENT
+// ============================================================================
+router.get('/me/profile', clientAuth, clientController.getProfile);
+router.put('/me/profile', clientAuth, clientController.updateProfile);
+router.put('/me/change-password', clientAuth, clientController.changePassword);
+
+// ============================================================================
+// CLIENT DASHBOARD - DOCUMENT MANAGEMENT
+// ============================================================================
+router.post('/me/documents', 
+  clientAuth,
+  upload.fields([
+    { name: 'driverLicense', maxCount: 1 },
+    { name: 'ssnCard', maxCount: 1 },
+    { name: 'proofOfAddress', maxCount: 1 },
+    { name: 'additionalDocs', maxCount: 5 }
+  ]), 
+  clientController.uploadDocuments
+);
+
+// ============================================================================
+// CLIENT DASHBOARD - REFERRAL PROGRAM
+// ============================================================================
+router.get('/me/referrals', clientAuth, clientController.getReferralInfo);
+
+// ============================================================================
+// CLIENT DASHBOARD - PERFORMANCE & REPORTS
+// ============================================================================
+router.get('/me/performance', clientAuth, clientController.getPerformanceReports);
+
+// ============================================================================
+// CLIENT DASHBOARD - SUPPORT
+// ============================================================================
+router.post('/me/support', clientAuth, clientController.contactSupport);
+
 module.exports = router; 

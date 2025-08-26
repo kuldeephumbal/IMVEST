@@ -32,8 +32,8 @@ async function register(req, res) {
       password
     } = req.body;
 
-    if (!firstName || !lastName || !email || !phone || !dateOfBirth || !ssn || !investmentPlan || !initialInvestment) {
-      return res.status(400).json({ message: 'Missing required fields' });
+    if (!firstName || !lastName || !email || !phone || !dateOfBirth || !ssn || !investmentPlan || !initialInvestment || !password) {
+      return res.status(400).json({ message: 'Missing required fields including password' });
     }
 
     let addressObj;
@@ -76,8 +76,8 @@ async function register(req, res) {
       currentBalance: investmentAmount,
     });
 
-    // Optional password if provided
-    if (password) client.password = password;
+    // Set password (required)
+    client.password = password;
 
     await client.save();
 
@@ -346,6 +346,256 @@ async function getOverview(req, res) {
   }
 }
 
+// Get client profile
+async function getProfile(req, res) {
+  try {
+    const client = await Client.findById(req.client._id).select('-password');
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+    
+    res.json({ client });
+  } catch (error) {
+    console.error('Get client profile error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Update client profile
+async function updateProfile(req, res) {
+  try {
+    const { firstName, lastName, phone, address, bankAccount } = req.body;
+    const updates = {};
+
+    if (firstName) updates.firstName = firstName;
+    if (lastName) updates.lastName = lastName;
+    if (phone) updates.phone = phone;
+    if (address) {
+      try {
+        updates.address = typeof address === 'string' ? JSON.parse(address) : address;
+      } catch (e) {
+        return res.status(400).json({ message: 'Invalid address format' });
+      }
+    }
+    if (bankAccount) {
+      try {
+        updates.bankAccount = typeof bankAccount === 'string' ? JSON.parse(bankAccount) : bankAccount;
+      } catch (e) {
+        return res.status(400).json({ message: 'Invalid bank account format' });
+      }
+    }
+
+    const client = await Client.findByIdAndUpdate(req.client._id, updates, { new: true, runValidators: true }).select('-password');
+
+    await writeAuditLog(req, {
+      action: 'client.profile.update',
+      status: 'success',
+      target: { type: 'client', id: req.client._id, summary: `client: ${client.email}` }
+    });
+
+    res.json({ message: 'Profile updated successfully', client });
+  } catch (error) {
+    console.error('Update client profile error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Upload additional documents
+async function uploadDocuments(req, res) {
+  try {
+    const client = await Client.findById(req.client._id);
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+
+    const documents = { ...client.documents };
+    if (req.files) {
+      if (req.files.driverLicense) documents.driverLicense = req.files.driverLicense[0].path;
+      if (req.files.ssnCard) documents.ssnCard = req.files.ssnCard[0].path;
+      if (req.files.proofOfAddress) documents.proofOfAddress = req.files.proofOfAddress[0].path;
+      if (req.files.additionalDocs) {
+        if (!documents.additionalDocs) documents.additionalDocs = [];
+        documents.additionalDocs.push(...req.files.additionalDocs.map(file => file.path));
+      }
+    }
+
+    await Client.findByIdAndUpdate(req.client._id, { documents });
+
+    await writeAuditLog(req, {
+      action: 'client.documents.upload',
+      status: 'success',
+      target: { type: 'client', id: req.client._id, summary: `client: ${client.email}` },
+      metadata: { documentsUploaded: Object.keys(req.files || {}).length }
+    });
+
+    res.json({ message: 'Documents uploaded successfully' });
+  } catch (error) {
+    console.error('Upload documents error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Get referral information
+async function getReferralInfo(req, res) {
+  try {
+    const client = await Client.findById(req.client._id);
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+
+    // Generate referral code if not exists
+    if (!client.referralCode) {
+      client.referralCode = `REF${client._id.toString().slice(-6).toUpperCase()}`;
+      await client.save();
+    }
+
+    // Get referred clients
+    const referredClients = await Client.find({ referredBy: client._id })
+      .select('firstName lastName email status createdAt')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      referralCode: client.referralCode,
+      referredClients,
+      totalReferrals: referredClients.length,
+      activeReferrals: referredClients.filter(c => ['approved', 'active'].includes(c.status)).length
+    });
+  } catch (error) {
+    console.error('Get referral info error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Get performance reports
+async function getPerformanceReports(req, res) {
+  try {
+    const { period = '6months' } = req.query;
+    const clientId = req.client._id;
+
+    let startDate = new Date();
+    switch (period) {
+      case '1month':
+        startDate.setMonth(startDate.getMonth() - 1);
+        break;
+      case '3months':
+        startDate.setMonth(startDate.getMonth() - 3);
+        break;
+      case '6months':
+        startDate.setMonth(startDate.getMonth() - 6);
+        break;
+      case '1year':
+        startDate.setFullYear(startDate.getFullYear() - 1);
+        break;
+      default:
+        startDate.setMonth(startDate.getMonth() - 6);
+    }
+
+    const transactions = await Transaction.find({
+      client: clientId,
+      createdAt: { $gte: startDate },
+      status: 'completed'
+    }).sort({ createdAt: 1 });
+
+    const monthlyData = {};
+    transactions.forEach(t => {
+      const monthKey = new Date(t.createdAt).toISOString().slice(0, 7);
+      if (!monthlyData[monthKey]) {
+        monthlyData[monthKey] = {
+          deposits: 0,
+          withdrawals: 0,
+          interest: 0,
+          fees: 0,
+          netChange: 0
+        };
+      }
+      
+      monthlyData[monthKey][t.type] += t.amount;
+      if (t.type === 'deposit' || t.type === 'interest_payment') {
+        monthlyData[monthKey].netChange += t.amount;
+      } else {
+        monthlyData[monthKey].netChange -= t.amount;
+      }
+    });
+
+    const performanceData = Object.entries(monthlyData).map(([month, data]) => ({
+      month,
+      ...data
+    }));
+
+    res.json({
+      period,
+      startDate,
+      performanceData,
+      summary: {
+        totalDeposits: transactions.filter(t => t.type === 'deposit').reduce((sum, t) => sum + t.amount, 0),
+        totalWithdrawals: transactions.filter(t => t.type === 'withdrawal').reduce((sum, t) => sum + t.amount, 0),
+        totalInterest: transactions.filter(t => t.type === 'interest_payment').reduce((sum, t) => sum + t.amount, 0),
+        totalFees: transactions.filter(t => t.type === 'fee').reduce((sum, t) => sum + t.amount, 0)
+      }
+    });
+  } catch (error) {
+    console.error('Get performance reports error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Contact support
+async function contactSupport(req, res) {
+  try {
+    const { subject, message, priority = 'normal' } = req.body;
+    
+    if (!subject || !message) {
+      return res.status(400).json({ message: 'Subject and message are required' });
+    }
+
+    const client = await Client.findById(req.client._id);
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+
+    // Here you would typically send an email to support
+    // For now, we'll just log it
+    await writeAuditLog(req, {
+      action: 'client.support.contact',
+      status: 'success',
+      target: { type: 'client', id: req.client._id, summary: `client: ${client.email}` },
+      metadata: { subject, priority, messageLength: message.length }
+    });
+
+    res.json({ message: 'Support request submitted successfully' });
+  } catch (error) {
+    console.error('Contact support error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Change password
+async function changePassword(req, res) {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Current password and new password are required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters long' });
+    }
+
+    const client = await Client.findById(req.client._id);
+    const isCurrentPasswordValid = await client.comparePassword(currentPassword);
+    if (!isCurrentPasswordValid) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+
+    client.password = newPassword;
+    await client.save();
+
+    await writeAuditLog(req, {
+      action: 'client.change_password',
+      status: 'success',
+      target: { type: 'client', id: req.client._id, summary: `client: ${client.email}` }
+    });
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 module.exports = {
   register,
   getPendingApprovals,
@@ -355,4 +605,11 @@ module.exports = {
   getTransactions,
   login,
   getOverview,
+  getProfile,
+  updateProfile,
+  uploadDocuments,
+  getReferralInfo,
+  getPerformanceReports,
+  contactSupport,
+  changePassword,
 }; 

@@ -363,6 +363,437 @@ async function resetPassword(req, res) {
   }
 }
 
+// ============================================================================
+// ADMIN DASHBOARD - CLIENT MANAGEMENT
+// ============================================================================
+
+// Get all clients with filtering and pagination
+async function getAllClients(req, res) {
+  try {
+    const { 
+      page = 1, 
+      limit = 20, 
+      status, 
+      search, 
+      investmentPlan,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = req.query;
+
+    const query = {};
+    
+    if (status) query.status = status;
+    if (investmentPlan) query.investmentPlan = investmentPlan;
+    
+    if (search) {
+      query.$or = [
+        { firstName: { $regex: search, $options: 'i' } },
+        { lastName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+    const skip = (page - 1) * limit;
+    const [clients, total] = await Promise.all([
+      Client.find(query)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(parseInt(limit))
+        .select('-password')
+        .lean(),
+      Client.countDocuments(query)
+    ]);
+
+    res.json({
+      clients,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    console.error('Get all clients error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Get client details
+async function getClientDetails(req, res) {
+  try {
+    const { clientId } = req.params;
+    
+    const client = await Client.findById(clientId).select('-password');
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+
+    // Get transaction summary
+    const Transaction = require('../models/Transaction');
+    const balance = await Transaction.getClientBalance(clientId);
+
+    // Get recent transactions
+    const recentTransactions = await Transaction.find({ client: clientId })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .lean();
+
+    res.json({
+      client,
+      balance,
+      recentTransactions
+    });
+  } catch (error) {
+    console.error('Get client details error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Update client status
+async function updateClientStatus(req, res) {
+  try {
+    const { clientId } = req.params;
+    const { status, notes } = req.body;
+
+    if (!['pending', 'approved', 'declined', 'suspended', 'active'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    const client = await Client.findById(clientId);
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+
+    const previousStatus = client.status;
+    client.status = status;
+    if (notes) client.approvalNotes = notes;
+    client.approvedBy = req.admin._id;
+    client.approvedAt = new Date();
+
+    if (status === 'approved' && previousStatus !== 'approved') {
+      client.startDate = new Date();
+      client.maturityDate = client.calculateMaturityDate();
+      client.kycStatus = 'verified';
+    }
+
+    await client.save();
+
+    await writeAuditLog(req, {
+      action: 'admin.client.status_update',
+      status: 'success',
+      target: { type: 'client', id: clientId, summary: `client: ${client.email}` },
+      metadata: { previousStatus, newStatus: status, notes }
+    });
+
+    res.json({ message: 'Client status updated successfully', client });
+  } catch (error) {
+    console.error('Update client status error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// ============================================================================
+// ADMIN DASHBOARD - DOCUMENT MANAGEMENT
+// ============================================================================
+
+// Get client documents
+async function getClientDocuments(req, res) {
+  try {
+    const { clientId } = req.params;
+    
+    const client = await Client.findById(clientId).select('documents firstName lastName email');
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+
+    res.json({
+      client: {
+        id: client._id,
+        name: `${client.firstName} ${client.lastName}`,
+        email: client.email
+      },
+      documents: client.documents
+    });
+  } catch (error) {
+    console.error('Get client documents error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// ============================================================================
+// ADMIN DASHBOARD - FINANCIAL REPORTS & ANALYTICS
+// ============================================================================
+
+// Get dashboard overview
+async function getDashboardOverview(req, res) {
+  try {
+    const { period = '30days' } = req.query;
+    
+    let startDate = new Date();
+    switch (period) {
+      case '7days':
+        startDate.setDate(startDate.getDate() - 7);
+        break;
+      case '30days':
+        startDate.setDate(startDate.getDate() - 30);
+        break;
+      case '90days':
+        startDate.setDate(startDate.getDate() - 90);
+        break;
+      case '1year':
+        startDate.setFullYear(startDate.getFullYear() - 1);
+        break;
+    }
+
+    const Client = require('../models/Client');
+    const Transaction = require('../models/Transaction');
+
+    // Get client counts
+    const [totalClients, activeClients, pendingClients] = await Promise.all([
+      Client.countDocuments(),
+      Client.countDocuments({ status: { $in: ['approved', 'active'] } }),
+      Client.countDocuments({ status: 'pending' })
+    ]);
+
+    // Get transaction summary
+    const transactionStats = await Transaction.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate },
+          status: 'completed'
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalDeposits: {
+            $sum: { $cond: [{ $eq: ['$type', 'deposit'] }, '$amount', 0] }
+          },
+          totalWithdrawals: {
+            $sum: { $cond: [{ $eq: ['$type', 'withdrawal'] }, '$amount', 0] }
+          },
+          totalInterest: {
+            $sum: { $cond: [{ $eq: ['$type', 'interest_payment'] }, '$amount', 0] }
+          },
+          transactionCount: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // Get investment plan distribution
+    const planDistribution = await Client.aggregate([
+      { $match: { status: { $in: ['approved', 'active'] } } },
+      {
+        $group: {
+          _id: '$investmentPlan',
+          count: { $sum: 1 },
+          totalInvested: { $sum: '$initialInvestment' }
+        }
+      }
+    ]);
+
+    const stats = transactionStats[0] || {
+      totalDeposits: 0,
+      totalWithdrawals: 0,
+      totalInterest: 0,
+      transactionCount: 0
+    };
+
+    res.json({
+      period,
+      overview: {
+        totalClients,
+        activeClients,
+        pendingClients,
+        totalDeposits: stats.totalDeposits,
+        totalWithdrawals: stats.totalWithdrawals,
+        totalInterest: stats.totalInterest,
+        transactionCount: stats.transactionCount
+      },
+      planDistribution
+    });
+  } catch (error) {
+    console.error('Get dashboard overview error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Get financial reports
+async function getFinancialReports(req, res) {
+  try {
+    const { startDate, endDate, reportType = 'monthly' } = req.query;
+    
+    const start = startDate ? new Date(startDate) : new Date(new Date().setMonth(new Date().getMonth() - 6));
+    const end = endDate ? new Date(endDate) : new Date();
+
+    const Transaction = require('../models/Transaction');
+
+    let groupBy;
+    let dateFormat;
+    
+    switch (reportType) {
+      case 'daily':
+        groupBy = { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } };
+        dateFormat = 'YYYY-MM-DD';
+        break;
+      case 'weekly':
+        groupBy = { $dateToString: { format: "%Y-W%U", date: "$createdAt" } };
+        dateFormat = 'YYYY-WW';
+        break;
+      case 'monthly':
+      default:
+        groupBy = { $dateToString: { format: "%Y-%m", date: "$createdAt" } };
+        dateFormat = 'YYYY-MM';
+        break;
+    }
+
+    const report = await Transaction.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: start, $lte: end },
+          status: 'completed'
+        }
+      },
+      {
+        $group: {
+          _id: groupBy,
+          deposits: {
+            $sum: { $cond: [{ $eq: ['$type', 'deposit'] }, '$amount', 0] }
+          },
+          withdrawals: {
+            $sum: { $cond: [{ $eq: ['$type', 'withdrawal'] }, '$amount', 0] }
+          },
+          interest: {
+            $sum: { $cond: [{ $eq: ['$type', 'interest_payment'] }, '$amount', 0] }
+          },
+          fees: {
+            $sum: { $cond: [{ $eq: ['$type', 'fee'] }, '$amount', 0] }
+          },
+          transactionCount: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.json({
+      reportType,
+      dateFormat,
+      startDate: start,
+      endDate: end,
+      data: report
+    });
+  } catch (error) {
+    console.error('Get financial reports error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// ============================================================================
+// ADMIN DASHBOARD - REFERRAL MANAGEMENT
+// ============================================================================
+
+// Get referral analytics
+async function getReferralAnalytics(req, res) {
+  try {
+    const Client = require('../models/Client');
+
+    const referralStats = await Client.aggregate([
+      {
+        $match: {
+          referredBy: { $exists: true, $ne: null }
+        }
+      },
+      {
+        $group: {
+          _id: '$referredBy',
+          referralCount: { $sum: 1 },
+          activeReferrals: {
+            $sum: { $cond: [{ $in: ['$status', ['approved', 'active']] }, 1, 0] }
+          },
+          totalInvested: { $sum: '$initialInvestment' }
+        }
+      },
+      {
+        $lookup: {
+          from: 'clients',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'referrer'
+        }
+      },
+      {
+        $unwind: '$referrer'
+      },
+      {
+        $project: {
+          referrerName: { $concat: ['$referrer.firstName', ' ', '$referrer.lastName'] },
+          referrerEmail: '$referrer.email',
+          referralCount: 1,
+          activeReferrals: 1,
+          totalInvested: 1
+        }
+      },
+      { $sort: { referralCount: -1 } }
+    ]);
+
+    const totalReferrals = await Client.countDocuments({ referredBy: { $exists: true, $ne: null } });
+    const activeReferrals = await Client.countDocuments({ 
+      referredBy: { $exists: true, $ne: null },
+      status: { $in: ['approved', 'active'] }
+    });
+
+    res.json({
+      totalReferrals,
+      activeReferrals,
+      referralStats
+    });
+  } catch (error) {
+    console.error('Get referral analytics error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// ============================================================================
+// ADMIN DASHBOARD - SYSTEM MONITORING
+// ============================================================================
+
+// Get system health
+async function getSystemHealth(req, res) {
+  try {
+    const Client = require('../models/Client');
+    const Transaction = require('../models/Transaction');
+    const AuditLog = require('../models/AuditLog');
+
+    // Get recent activity
+    const recentActivity = await AuditLog.find()
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .populate('actor', 'firstName lastName email')
+      .lean();
+
+    // Get pending actions
+    const pendingActions = {
+      pendingApprovals: await Client.countDocuments({ status: 'pending' }),
+      pendingTransactions: await Transaction.countDocuments({ status: 'pending' })
+    };
+
+    // Get system stats
+    const systemStats = {
+      totalClients: await Client.countDocuments(),
+      totalTransactions: await Transaction.countDocuments(),
+      totalAuditLogs: await AuditLog.countDocuments()
+    };
+
+    res.json({
+      systemStats,
+      pendingActions,
+      recentActivity
+    });
+  } catch (error) {
+    console.error('Get system health error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 module.exports = {
   register,
   login,
@@ -373,4 +804,12 @@ module.exports = {
   forgotPassword,
   verifyOTP,
   resetPassword,
+  getAllClients,
+  getClientDetails,
+  updateClientStatus,
+  getClientDocuments,
+  getDashboardOverview,
+  getFinancialReports,
+  getReferralAnalytics,
+  getSystemHealth,
 }; 
