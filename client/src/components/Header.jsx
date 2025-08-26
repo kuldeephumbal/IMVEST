@@ -28,7 +28,7 @@ import {
     AccountCircle
 } from '@mui/icons-material';
 
-const Header = ({ onMenuClick, isDarkMode, onThemeToggle, sidebarOpen }) => {
+const Header = ({ onMenuClick, sidebarOpen }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const navigate = useNavigate();
@@ -56,6 +56,12 @@ const Header = ({ onMenuClick, isDarkMode, onThemeToggle, sidebarOpen }) => {
         handleProfileMenuClose();
         // Navigate to profile page
         navigate('/profile');
+    };
+
+    const handleSettings = () => {
+        handleProfileMenuClose();
+        // Navigate to settings page
+        navigate('/settings');
     };
 
     return (
@@ -98,10 +104,6 @@ const Header = ({ onMenuClick, isDarkMode, onThemeToggle, sidebarOpen }) => {
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <IconButton color="inherit" onClick={onThemeToggle}>
-                        {isDarkMode ? <Brightness7 /> : <Brightness4 />}
-                    </IconButton>
-
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="error">
                             <Notifications />
@@ -142,7 +144,7 @@ const Header = ({ onMenuClick, isDarkMode, onThemeToggle, sidebarOpen }) => {
                             <ListItemText>Profile</ListItemText>
                         </MenuItem>
 
-                        <MenuItem onClick={handleProfileMenuClose}>
+                        <MenuItem onClick={handleSettings}>
                             <ListItemIcon>
                                 <Settings fontSize="small" />
                             </ListItemIcon>
