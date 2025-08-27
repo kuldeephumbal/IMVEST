@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
 import {
     Box,
     Card,
@@ -12,37 +12,38 @@ import {
     Link
 } from '@mui/material';
 import {
-    Email,
     Lock,
     Visibility,
-    VisibilityOff
+    VisibilityOff,
+    ArrowBack
 } from '@mui/icons-material';
 import { useToast } from '../contexts/ToastContext';
 import { adminAPI } from '../services/api';
 
-const Login = () => {
+const ResetPassword = () => {
     const navigate = useNavigate();
-    const { showSuccess, showError, showWarning } = useToast();
+    const location = useLocation();
+    const { showSuccess, showError } = useToast();
     
     const [formData, setFormData] = useState({
-        email: '',
-        password: ''
+        newPassword: '',
+        confirmPassword: ''
     });
-    
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [otp, setOtp] = useState('');
 
-    // Check if user is already logged in
     useEffect(() => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const adminToken = localStorage.getItem('adminToken');
-        
-        if (isLoggedIn && adminToken) {
-            navigate('/dashboard');
+        if (location.state?.email && location.state?.otp) {
+            setEmail(location.state.email);
+            setOtp(location.state.otp);
+        } else {
+            // If no email or OTP in state, redirect back to forgot password
+            navigate('/forgot-password');
         }
-    }, [navigate]);
-
-
+    }, [location.state, navigate]);
 
     const handleChange = (e) => {
         setFormData({
@@ -51,68 +52,59 @@ const Login = () => {
         });
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         // Validation
-        if (!formData.email || !formData.password) {
+        if (!formData.newPassword || !formData.confirmPassword) {
             showError('Please fill in all fields');
             setLoading(false);
             return;
         }
 
-        if (!formData.email.includes('@')) {
-            showError('Please enter a valid email address');
+        if (formData.newPassword.length < 6) {
+            showError('Password must be at least 6 characters long');
+            setLoading(false);
+            return;
+        }
+
+        if (formData.newPassword !== formData.confirmPassword) {
+            showError('Passwords do not match');
             setLoading(false);
             return;
         }
 
         try {
-            // Call the API
-            const response = await adminAPI.login({
-                email: formData.email,
-                password: formData.password
+            // Call the reset password API
+            const response = await adminAPI.resetPassword({
+                email,
+                otp,
+                newPassword: formData.newPassword
             });
-
-            // Store data in localStorage
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('adminToken', response.token);
-            localStorage.setItem('adminData', JSON.stringify(response.admin));
-            localStorage.setItem('userRole', response.admin.role);
-            localStorage.setItem('userEmail', response.admin.email);
-
-            // Show success message based on detected role
-            const roleLabels = {
-                super_admin: 'Super Admin',
-                admin: 'Admin',
-                manager: 'Manager'
-            };
             
-            const roleLabel = roleLabels[response.admin.role] || 'Admin';
-            showSuccess(`Welcome back, ${response.admin.firstName}! You are logged in as ${roleLabel}`, {
-                autoClose: 3000
-            });
-
-            // Navigate to dashboard
+            showSuccess('Password reset successfully! You can now login with your new password.');
+            
+            // Navigate to login page
             setTimeout(() => {
-                navigate('/dashboard');
-            }, 1000);
+                navigate('/login');
+            }, 2000);
 
         } catch (error) {
-            console.error('Login error:', error);
-            
-            // Set loading to false immediately
-            setLoading(false);
-            
-            // Show error message
-            const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
+            console.error('Reset password error:', error);
+            const errorMessage = error.message || 'Failed to reset password. Please try again.';
             showError(errorMessage);
+        } finally {
+            setLoading(false);
         }
-    };
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
     };
 
     return (
@@ -145,36 +137,21 @@ const Login = () => {
                         >
                             IMVEST
                         </Typography>
-                        <Typography variant="h6" color="text.secondary">
-                            Admin Login
+                        <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                            Reset Password
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Enter your new password
                         </Typography>
                     </Box>
 
                     <form onSubmit={handleSubmit}>
                         <TextField
                             fullWidth
-                            name="email"
-                            type="email"
-                            label="Email Address"
-                            value={formData.email}
-                            onChange={handleChange}
-                            margin="normal"
-                            required
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Email color="action" />
-                                    </InputAdornment>
-                                )
-                            }}
-                        />
-
-                        <TextField
-                            fullWidth
-                            name="password"
+                            name="newPassword"
                             type={showPassword ? 'text' : 'password'}
-                            label="Password"
-                            value={formData.password}
+                            label="New Password"
+                            value={formData.newPassword}
                             onChange={handleChange}
                             margin="normal"
                             required
@@ -197,6 +174,34 @@ const Login = () => {
                             }}
                         />
 
+                        <TextField
+                            fullWidth
+                            name="confirmPassword"
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            label="Confirm New Password"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            margin="normal"
+                            required
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Lock color="action" />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={toggleConfirmPasswordVisibility}
+                                            edge="end"
+                                        >
+                                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+
                         <Button
                             type="submit"
                             fullWidth
@@ -213,23 +218,28 @@ const Login = () => {
                                 }
                             }}
                         >
-                            {loading ? 'Signing In...' : 'Sign In'}
+                            {loading ? 'Resetting Password...' : 'Reset Password'}
                         </Button>
                         
-                        <Box sx={{ textAlign: 'right', mt: 1 }}>
+                        <Box sx={{ textAlign: 'center', mt: 2 }}>
                             <Link
                                 component={RouterLink}
-                                to="/forgot-password"
+                                to="/verify-otp"
                                 sx={{
                                     color: '#3b82f6',
                                     textDecoration: 'none',
                                     fontSize: '14px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: 0.5,
                                     '&:hover': {
                                         textDecoration: 'underline'
                                     }
                                 }}
                             >
-                                Forgot Password?
+                                <ArrowBack fontSize="small" />
+                                Back to OTP Verification
                             </Link>
                         </Box>
                     </form>
@@ -239,4 +249,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default ResetPassword; 
