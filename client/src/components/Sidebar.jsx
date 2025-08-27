@@ -48,9 +48,7 @@ const Sidebar = ({ open, onClose }) => {
     const getActiveItemFromPath = () => {
         const path = location.pathname;
         if (path === '/' || path === '/dashboard') return 'Dashboard';
-        if (path === '/users') return 'Users';
-        if (path === '/settings') return 'Settings';
-        if (path === '/profile') return 'Profile';
+        if (path === '/client-management') return 'Client Management';
         return 'Dashboard';
     };
 
@@ -61,9 +59,7 @@ const Sidebar = ({ open, onClose }) => {
         const getActiveFromPath = () => {
             const path = location.pathname;
             if (path === '/' || path === '/dashboard') return 'Dashboard';
-            if (path === '/users') return 'Users';
-            if (path === '/settings') return 'Settings';
-            if (path === '/profile') return 'Profile';
+            if (path === '/client-management') return 'Client Management';
             return 'Dashboard';
         };
         setActiveItem(getActiveFromPath());
@@ -104,21 +100,9 @@ const Sidebar = ({ open, onClose }) => {
             path: '/dashboard'
         },
         {
-            title: 'Users',
+            title: 'Client Management',
             icon: <People />,
-            path: '/users'
-        },
-        {
-            title: 'Settings',
-            icon: <Settings />,
-            path: '/settings'
-        },
-        { divider: true, title: 'COMPONENTS' },
-        {
-            title: 'Charts',
-            icon: <BarChart />,
-            path: '/charts',
-            badge: { text: 'NEW', color: 'info' }
+            path: '/client-management'
         }
     ];
 

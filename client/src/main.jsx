@@ -6,11 +6,13 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './index.css';
 import App from './App';
 import Dashboard from './pages/Dashboard';
-import Users from './pages/Users';
+import ClientManagement from './pages/ClientManagement';
+import ClientDetails from './pages/ClientDetails';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import { ToastProvider } from './contexts/ToastContext';
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -22,7 +24,8 @@ createRoot(document.getElementById('root')).render(
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/users" element={<Users />} />
+              <Route path="/client-management" element={<ClientManagement />} />
+            <Route path="/client-details/:clientId" element={<ClientDetails />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<div>Page Not Found</div>} />

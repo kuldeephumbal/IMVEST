@@ -42,12 +42,12 @@ const Settings = () => {
     return (
         <>
             <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" color="primary">
+                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                     Home / Settings
                 </Typography>
             </Box>
 
-            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3 }}>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3, color: 'white' }}>
                 Settings
             </Typography>
 
@@ -57,14 +57,17 @@ const Settings = () => {
                         <Paper
                             sx={{
                                 p: 3,
-                                backgroundColor: 'background.paper',
-                                borderRadius: 2,
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                backdropFilter: 'blur(20px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                borderRadius: '20px',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                                 mb: 3
                             }}
                         >
                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                                <Security sx={{ mr: 2, color: 'primary.main' }} />
-                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                <Security sx={{ mr: 2, color: '#60a5fa' }} />
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
                                     General Settings
                                 </Typography>
                             </Box>
@@ -77,6 +80,26 @@ const Settings = () => {
                                         value={settings.companyName}
                                         onChange={handleChange('companyName')}
                                         variant="outlined"
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                color: 'white',
+                                                '& fieldset': {
+                                                    borderColor: 'rgba(255, 255, 255, 0.3)'
+                                                },
+                                                '&:hover fieldset': {
+                                                    borderColor: 'rgba(255, 255, 255, 0.5)'
+                                                },
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: '#60a5fa'
+                                                }
+                                            },
+                                            '& .MuiInputLabel-root': {
+                                                color: 'rgba(255, 255, 255, 0.7)',
+                                                '&.Mui-focused': {
+                                                    color: '#60a5fa'
+                                                }
+                                            }
+                                        }}
                                     />
                                 </div>
                                 <div className="col-12 col-sm-6">
@@ -87,6 +110,26 @@ const Settings = () => {
                                         value={settings.email}
                                         onChange={handleChange('email')}
                                         variant="outlined"
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                color: 'white',
+                                                '& fieldset': {
+                                                    borderColor: 'rgba(255, 255, 255, 0.3)'
+                                                },
+                                                '&:hover fieldset': {
+                                                    borderColor: 'rgba(255, 255, 255, 0.5)'
+                                                },
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: '#60a5fa'
+                                                }
+                                            },
+                                            '& .MuiInputLabel-root': {
+                                                color: 'rgba(255, 255, 255, 0.7)',
+                                                '&.Mui-focused': {
+                                                    color: '#60a5fa'
+                                                }
+                                            }
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -95,7 +138,13 @@ const Settings = () => {
                                 variant="contained"
                                 startIcon={<Save />}
                                 onClick={handleSave}
-                                sx={{ mt: 3 }}
+                                sx={{
+                                    mt: 3,
+                                    background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                                    '&:hover': {
+                                        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+                                    }
+                                }}
                             >
                                 Save Changes
                             </Button>
@@ -104,13 +153,16 @@ const Settings = () => {
                         <Paper
                             sx={{
                                 p: 3,
-                                backgroundColor: 'background.paper',
-                                borderRadius: 2
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                backdropFilter: 'blur(20px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                borderRadius: '20px',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
                             }}
                         >
                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                                <Notifications sx={{ mr: 2, color: 'primary.main' }} />
-                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                <Notifications sx={{ mr: 2, color: '#60a5fa' }} />
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
                                     Preferences
                                 </Typography>
                             </Box>
@@ -121,40 +173,68 @@ const Settings = () => {
                                         <Switch
                                             checked={settings.notifications}
                                             onChange={handleChange('notifications')}
-                                            color="primary"
+                                            sx={{
+                                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                                    color: '#60a5fa'
+                                                },
+                                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                    backgroundColor: '#60a5fa'
+                                                }
+                                            }}
                                         />
                                     }
-                                    label="Email Notifications"
+                                    label={<Typography sx={{ color: 'white' }}>Email Notifications</Typography>}
                                 />
                                 <FormControlLabel
                                     control={
                                         <Switch
                                             checked={settings.darkMode}
                                             onChange={handleChange('darkMode')}
-                                            color="primary"
+                                            sx={{
+                                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                                    color: '#60a5fa'
+                                                },
+                                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                    backgroundColor: '#60a5fa'
+                                                }
+                                            }}
                                         />
                                     }
-                                    label="Dark Mode"
+                                    label={<Typography sx={{ color: 'white' }}>Dark Mode</Typography>}
                                 />
                                 <FormControlLabel
                                     control={
                                         <Switch
                                             checked={settings.autoSave}
                                             onChange={handleChange('autoSave')}
-                                            color="primary"
+                                            sx={{
+                                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                                    color: '#60a5fa'
+                                                },
+                                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                    backgroundColor: '#60a5fa'
+                                                }
+                                            }}
                                         />
                                     }
-                                    label="Auto Save"
+                                    label={<Typography sx={{ color: 'white' }}>Auto Save</Typography>}
                                 />
                                 <FormControlLabel
                                     control={
                                         <Switch
                                             checked={settings.twoFactor}
                                             onChange={handleChange('twoFactor')}
-                                            color="primary"
+                                            sx={{
+                                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                                    color: '#60a5fa'
+                                                },
+                                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                    backgroundColor: '#60a5fa'
+                                                }
+                                            }}
                                         />
                                     }
-                                    label="Two-Factor Authentication"
+                                    label={<Typography sx={{ color: 'white' }}>Two-Factor Authentication</Typography>}
                                 />
                             </Box>
                         </Paper>
@@ -164,21 +244,35 @@ const Settings = () => {
                         <Paper
                             sx={{
                                 p: 3,
-                                backgroundColor: 'background.paper',
-                                borderRadius: 2,
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                backdropFilter: 'blur(20px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                borderRadius: '20px',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                                 mb: 3
                             }}
                         >
                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <Palette sx={{ mr: 2, color: 'primary.main' }} />
-                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                <Palette sx={{ mr: 2, color: '#60a5fa' }} />
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
                                     Quick Info
                                 </Typography>
                             </Box>
-                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
                                 Your settings are automatically synced across all devices.
                             </Typography>
-                            <Alert severity="info" sx={{ mt: 2 }}>
+                            <Alert
+                                severity="info"
+                                sx={{
+                                    mt: 2,
+                                    background: 'rgba(33, 150, 243, 0.1)',
+                                    border: '1px solid rgba(33, 150, 243, 0.3)',
+                                    color: '#2196f3',
+                                    '& .MuiAlert-icon': {
+                                        color: '#2196f3'
+                                    }
+                                }}
+                            >
                                 Changes will take effect immediately after saving.
                             </Alert>
                         </Paper>
@@ -186,20 +280,36 @@ const Settings = () => {
                         <Paper
                             sx={{
                                 p: 3,
-                                backgroundColor: 'background.paper',
-                                borderRadius: 2
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                backdropFilter: 'blur(20px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                borderRadius: '20px',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
                             }}
                         >
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: 'white' }}>
                                 Account Security
                             </Typography>
-                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
                                 Last login: Today at 2:30 PM
                             </Typography>
-                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
                                 IP Address: 192.168.1.1
                             </Typography>
-                            <Button variant="outlined" size="small" fullWidth>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                sx={{
+                                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                                    color: 'white',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    '&:hover': {
+                                        borderColor: 'rgba(255, 255, 255, 0.5)',
+                                        background: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                }}
+                            >
                                 View Login History
                             </Button>
                         </Paper>

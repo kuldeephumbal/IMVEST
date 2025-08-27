@@ -172,19 +172,39 @@ const Profile = () => {
     return (
         <>
             <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" color="primary">
+                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                     Home / Profile
                 </Typography>
             </Box>
 
             {successMessage && (
-                <Alert severity="success" sx={{ mb: 3 }}>
+                <Alert
+                    severity="success"
+                    sx={{
+                        mb: 3,
+                        background: 'rgba(76, 175, 80, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(76, 175, 80, 0.3)',
+                        borderRadius: '15px',
+                        color: '#4caf50'
+                    }}
+                >
                     {successMessage}
                 </Alert>
             )}
 
             {errorMessage && (
-                <Alert severity="error" sx={{ mb: 3 }}>
+                <Alert
+                    severity="error"
+                    sx={{
+                        mb: 3,
+                        background: 'rgba(244, 67, 54, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(244, 67, 54, 0.3)',
+                        borderRadius: '15px',
+                        color: '#f44336'
+                    }}
+                >
                     {errorMessage}
                 </Alert>
             )}
@@ -193,9 +213,15 @@ const Profile = () => {
                 <div className="row justify-content-center">
                     {/* Profile Picture and Actions Card */}
                     <div className="col-12 col-md-4 mb-3">
-                        <Card>
+                        <Card sx={{
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: '20px',
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                        }}>
                             <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3, color: 'white' }}>
                                     Profile Picture
                                 </Typography>
 
@@ -205,8 +231,8 @@ const Profile = () => {
                                         sx={{
                                             width: 120,
                                             height: 120,
-                                            border: '4px solid',
-                                            borderColor: 'primary.main'
+                                            border: '4px solid rgba(255, 255, 255, 0.3)',
+                                            borderColor: 'rgba(96, 165, 250, 0.8)'
                                         }}
                                     >
                                         {!profileData.avatar && `${profileData.firstName[0]}${profileData.lastName[0]}`}
@@ -217,10 +243,12 @@ const Profile = () => {
                                                 position: 'absolute',
                                                 bottom: 0,
                                                 right: 0,
-                                                backgroundColor: 'primary.main',
+                                                background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
                                                 color: 'white',
+                                                backdropFilter: 'blur(10px)',
+                                                border: '1px solid rgba(255, 255, 255, 0.2)',
                                                 '&:hover': {
-                                                    backgroundColor: 'primary.dark'
+                                                    background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
                                                 }
                                             }}
                                             size="small"
@@ -230,21 +258,31 @@ const Profile = () => {
                                     )}
                                 </Box>
 
-                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
                                     {profileData.firstName} {profileData.lastName}
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 3 }}>
                                     Administrator
                                 </Typography>
 
-                                <Divider sx={{ my: 3 }} />
+                                <Divider sx={{ my: 3, backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
 
                                 <Button
                                     fullWidth
                                     variant="outlined"
                                     startIcon={<Lock />}
                                     onClick={() => setShowPasswordDialog(true)}
-                                    sx={{ mb: 2 }}
+                                    sx={{
+                                        mb: 2,
+                                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                                        color: 'white',
+                                        background: 'rgba(255, 255, 255, 0.05)',
+                                        backdropFilter: 'blur(10px)',
+                                        '&:hover': {
+                                            borderColor: 'rgba(255, 255, 255, 0.5)',
+                                            background: 'rgba(255, 255, 255, 0.1)'
+                                        }
+                                    }}
                                 >
                                     Change Password
                                 </Button>
@@ -254,10 +292,16 @@ const Profile = () => {
 
                     {/* Profile Information Card */}
                     <div className="col-12 col-md-8 mb-3">
-                        <Card>
+                        <Card sx={{
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: '20px',
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                        }}>
                             <CardContent sx={{ p: 4 }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'white' }}>
                                         Profile Information
                                     </Typography>
                                     <Box>
@@ -267,7 +311,16 @@ const Profile = () => {
                                                     variant="outlined"
                                                     startIcon={<Cancel />}
                                                     onClick={handleEditToggle}
-                                                    sx={{ mr: 1 }}
+                                                    sx={{
+                                                        mr: 1,
+                                                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                                                        color: 'white',
+                                                        background: 'rgba(255, 255, 255, 0.05)',
+                                                        '&:hover': {
+                                                            borderColor: 'rgba(255, 255, 255, 0.5)',
+                                                            background: 'rgba(255, 255, 255, 0.1)'
+                                                        }
+                                                    }}
                                                 >
                                                     Cancel
                                                 </Button>
@@ -275,6 +328,12 @@ const Profile = () => {
                                                     variant="contained"
                                                     startIcon={<Save />}
                                                     onClick={handleSaveProfile}
+                                                    sx={{
+                                                        background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                                                        '&:hover': {
+                                                            background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+                                                        }
+                                                    }}
                                                 >
                                                     Save Changes
                                                 </Button>
@@ -284,6 +343,12 @@ const Profile = () => {
                                                 variant="contained"
                                                 startIcon={<Edit />}
                                                 onClick={handleEditToggle}
+                                                sx={{
+                                                    background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                                                    '&:hover': {
+                                                        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+                                                    }
+                                                }}
                                             >
                                                 Edit
                                             </Button>
@@ -291,7 +356,7 @@ const Profile = () => {
                                     </Box>
                                 </Box>
 
-                                <Divider sx={{ mb: 3 }} />
+                                <Divider sx={{ mb: 3, backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
 
                                 <div className="row">
                                     <div className="col-12 col-sm-6 mb-3">
@@ -304,9 +369,32 @@ const Profile = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <Person color="action" />
+                                                        <Person sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                                                     </InputAdornment>
                                                 )
+                                            }}
+                                            sx={{
+                                                '& .MuiOutlinedInput-root': {
+                                                    color: 'white',
+                                                    '& fieldset': {
+                                                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                                                    },
+                                                    '&:hover fieldset': {
+                                                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                                                    },
+                                                    '&.Mui-focused fieldset': {
+                                                        borderColor: '#60a5fa'
+                                                    },
+                                                    '&.Mui-disabled': {
+                                                        color: 'rgba(255, 255, 255, 0.6)'
+                                                    }
+                                                },
+                                                '& .MuiInputLabel-root': {
+                                                    color: 'rgba(255, 255, 255, 0.7)',
+                                                    '&.Mui-focused': {
+                                                        color: '#60a5fa'
+                                                    }
+                                                }
                                             }}
                                         />
                                     </div>
@@ -320,9 +408,32 @@ const Profile = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <Person color="action" />
+                                                        <Person sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                                                     </InputAdornment>
                                                 )
+                                            }}
+                                            sx={{
+                                                '& .MuiOutlinedInput-root': {
+                                                    color: 'white',
+                                                    '& fieldset': {
+                                                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                                                    },
+                                                    '&:hover fieldset': {
+                                                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                                                    },
+                                                    '&.Mui-focused fieldset': {
+                                                        borderColor: '#60a5fa'
+                                                    },
+                                                    '&.Mui-disabled': {
+                                                        color: 'rgba(255, 255, 255, 0.6)'
+                                                    }
+                                                },
+                                                '& .MuiInputLabel-root': {
+                                                    color: 'rgba(255, 255, 255, 0.7)',
+                                                    '&.Mui-focused': {
+                                                        color: '#60a5fa'
+                                                    }
+                                                }
                                             }}
                                         />
                                     </div>
@@ -337,9 +448,32 @@ const Profile = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <Email color="action" />
+                                                        <Email sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                                                     </InputAdornment>
                                                 )
+                                            }}
+                                            sx={{
+                                                '& .MuiOutlinedInput-root': {
+                                                    color: 'white',
+                                                    '& fieldset': {
+                                                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                                                    },
+                                                    '&:hover fieldset': {
+                                                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                                                    },
+                                                    '&.Mui-focused fieldset': {
+                                                        borderColor: '#60a5fa'
+                                                    },
+                                                    '&.Mui-disabled': {
+                                                        color: 'rgba(255, 255, 255, 0.6)'
+                                                    }
+                                                },
+                                                '& .MuiInputLabel-root': {
+                                                    color: 'rgba(255, 255, 255, 0.7)',
+                                                    '&.Mui-focused': {
+                                                        color: '#60a5fa'
+                                                    }
+                                                }
                                             }}
                                         />
                                     </div>
@@ -353,9 +487,32 @@ const Profile = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <Phone color="action" />
+                                                        <Phone sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                                                     </InputAdornment>
                                                 )
+                                            }}
+                                            sx={{
+                                                '& .MuiOutlinedInput-root': {
+                                                    color: 'white',
+                                                    '& fieldset': {
+                                                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                                                    },
+                                                    '&:hover fieldset': {
+                                                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                                                    },
+                                                    '&.Mui-focused fieldset': {
+                                                        borderColor: '#60a5fa'
+                                                    },
+                                                    '&.Mui-disabled': {
+                                                        color: 'rgba(255, 255, 255, 0.6)'
+                                                    }
+                                                },
+                                                '& .MuiInputLabel-root': {
+                                                    color: 'rgba(255, 255, 255, 0.7)',
+                                                    '&.Mui-focused': {
+                                                        color: '#60a5fa'
+                                                    }
+                                                }
                                             }}
                                         />
                                     </div>
@@ -372,9 +529,18 @@ const Profile = () => {
                 onClose={handlePasswordDialogClose}
                 maxWidth="sm"
                 fullWidth
+                PaperProps={{
+                    sx: {
+                        background: 'rgba(30, 41, 59, 0.95)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '20px',
+                        color: 'white'
+                    }
+                }}
             >
                 <DialogTitle>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
                         Change Password
                     </Typography>
                 </DialogTitle>
@@ -390,7 +556,7 @@ const Profile = () => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <Lock color="action" />
+                                        <Lock sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                                     </InputAdornment>
                                 ),
                                 endAdornment: (
@@ -398,11 +564,32 @@ const Profile = () => {
                                         <IconButton
                                             onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                                             edge="end"
+                                            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
                                         >
                                             {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
                                 )
+                            }}
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    color: 'white',
+                                    '& fieldset': {
+                                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#60a5fa'
+                                    }
+                                },
+                                '& .MuiInputLabel-root': {
+                                    color: 'rgba(255, 255, 255, 0.7)',
+                                    '&.Mui-focused': {
+                                        color: '#60a5fa'
+                                    }
+                                }
                             }}
                         />
                         <TextField
@@ -415,7 +602,7 @@ const Profile = () => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <Lock color="action" />
+                                        <Lock sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                                     </InputAdornment>
                                 ),
                                 endAdornment: (
@@ -423,11 +610,32 @@ const Profile = () => {
                                         <IconButton
                                             onClick={() => setShowNewPassword(!showNewPassword)}
                                             edge="end"
+                                            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
                                         >
                                             {showNewPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
                                 )
+                            }}
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    color: 'white',
+                                    '& fieldset': {
+                                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#60a5fa'
+                                    }
+                                },
+                                '& .MuiInputLabel-root': {
+                                    color: 'rgba(255, 255, 255, 0.7)',
+                                    '&.Mui-focused': {
+                                        color: '#60a5fa'
+                                    }
+                                }
                             }}
                         />
                         <TextField
@@ -440,7 +648,7 @@ const Profile = () => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <Lock color="action" />
+                                        <Lock sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                                     </InputAdornment>
                                 ),
                                 endAdornment: (
@@ -448,23 +656,58 @@ const Profile = () => {
                                         <IconButton
                                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                             edge="end"
+                                            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
                                         >
                                             {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
                                 )
                             }}
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    color: 'white',
+                                    '& fieldset': {
+                                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: 'rgba(255, 255, 255, 0.5)'
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#60a5fa'
+                                    }
+                                },
+                                '& .MuiInputLabel-root': {
+                                    color: 'rgba(255, 255, 255, 0.7)',
+                                    '&.Mui-focused': {
+                                        color: '#60a5fa'
+                                    }
+                                }
+                            }}
                         />
                     </Box>
                 </DialogContent>
                 <DialogActions sx={{ p: 3 }}>
-                    <Button onClick={handlePasswordDialogClose} color="inherit">
+                    <Button
+                        onClick={handlePasswordDialogClose}
+                        sx={{
+                            color: 'rgba(255, 255, 255, 0.7)',
+                            '&:hover': {
+                                background: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }}
+                    >
                         Cancel
                     </Button>
                     <Button
                         onClick={handlePasswordSave}
                         variant="contained"
                         startIcon={<Save />}
+                        sx={{
+                            background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                            '&:hover': {
+                                background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+                            }
+                        }}
                     >
                         Change Password
                     </Button>
