@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     AppBar,
@@ -14,7 +14,8 @@ import {
     MenuItem,
     ListItemIcon,
     ListItemText,
-    Divider
+    Divider,
+    Chip
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -25,16 +26,32 @@ import {
     Brightness7,
     Person,
     Logout,
-    AccountCircle
+    AccountCircle,
+    AdminPanelSettings,
+    SupervisedUserCircle
 } from '@mui/icons-material';
+import { useToast } from '../contexts/ToastContext';
+import { adminAPI } from '../services/api';
 
 const Header = ({ onMenuClick, sidebarOpen }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const navigate = useNavigate();
+    const { showSuccess, showError } = useToast();
     const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
-    const isProfileMenuOpen = Boolean(profileMenuAnchor);
-    console.log('Profile menu open:', isProfileMenuOpen);
+    const [adminData, setAdminData] = useState(null);
+
+    // Load admin data from localStorage
+    useEffect(() => {
+        const storedAdminData = localStorage.getItem('adminData');
+        if (storedAdminData) {
+            try {
+                setAdminData(JSON.parse(storedAdminData));
+            } catch (error) {
+                console.error('Error parsing admin data:', error);
+            }
+        }
+    }, []);
 
     const handleProfileMenuOpen = (event) => {
         setProfileMenuAnchor(event.currentTarget);
@@ -44,12 +61,39 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
         setProfileMenuAnchor(null);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         handleProfileMenuClose();
-        // Clear login state and redirect to login
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('userEmail');
-        navigate('/login');
+        
+        try {
+            // Call logout API
+            await adminAPI.logout();
+            
+            // Clear all stored data
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminData');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            
+            showSuccess('Successfully logged out');
+            
+            // Navigate to login
+            setTimeout(() => {
+                navigate('/login');
+            }, 1000);
+            
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Even if API call fails, clear local data
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminData');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            
+            showError('Error during logout, but you have been logged out locally');
+            navigate('/login');
+        }
     };
 
     const handleProfile = () => {
@@ -104,6 +148,37 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    {/* User Info Display */}
+                    {adminData && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                                {adminData.firstName} {adminData.lastName}
+                            </Typography>
+                            <Chip
+                                icon={
+                                    adminData.role === 'super_admin' ? <AdminPanelSettings /> :
+                                    adminData.role === 'manager' ? <SupervisedUserCircle /> :
+                                    <Person />
+                                }
+                                label={
+                                    adminData.role === 'super_admin' ? 'Super Admin' :
+                                    adminData.role === 'admin' ? 'Admin' :
+                                    adminData.role === 'manager' ? 'Manager' :
+                                    adminData.role.charAt(0).toUpperCase() + adminData.role.slice(1)
+                                }
+                                size="small"
+                                sx={{
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                    color: 'rgba(255, 255, 255, 0.9)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                    '& .MuiChip-icon': {
+                                        color: 'rgba(255, 255, 255, 0.7)'
+                                    }
+                                }}
+                            />
+                        </Box>
+                    )}
+
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="error">
                             <Notifications />
@@ -116,9 +191,15 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                         sx={{ p: 0.5 }}
                     >
                         <Avatar
-                            src="/api/placeholder/32/32"
-                            sx={{ width: 32, height: 32 }}
-                        />
+                            sx={{ 
+                                width: 32, 
+                                height: 32,
+                                backgroundColor: adminData?.role === 'super_admin' ? '#d32f2f' :
+                                                adminData?.role === 'manager' ? '#388e3c' : '#1976d2'
+                            }}
+                        >
+                            {adminData ? `${adminData.firstName.charAt(0)}${adminData.lastName.charAt(0)}` : 'A'}
+                        </Avatar>
                     </IconButton>
 
                     <Menu
@@ -141,7 +222,10 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                             <ListItemIcon>
                                 <Person fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText>Profile</ListItemText>
+                            <ListItemText 
+                                primary="Profile" 
+                                secondary={adminData ? `${adminData.firstName} ${adminData.lastName}` : ''}
+                            />
                         </MenuItem>
 
                         <MenuItem onClick={handleSettings}>

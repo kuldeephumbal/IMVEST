@@ -19,7 +19,10 @@ const App = ({ children }) => {
     // Check if user is logged in
     useEffect(() => {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
-        if (!isLoggedIn) {
+        const adminToken = localStorage.getItem('adminToken');
+        const adminData = localStorage.getItem('adminData');
+        
+        if (!isLoggedIn || !adminToken || !adminData) {
             navigate('/login');
         }
     }, [navigate]);
