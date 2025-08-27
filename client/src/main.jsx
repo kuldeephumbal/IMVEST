@@ -11,6 +11,9 @@ import ClientDetails from './pages/ClientDetails';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import VerifyOTP from './pages/VerifyOTP';
+import ResetPassword from './pages/ResetPassword';
 import { ToastProvider } from './contexts/ToastContext';
 
 
@@ -20,6 +23,9 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-otp" element={<VerifyOTP />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/*" element={<App>
             <Routes>
               <Route path="/" element={<Dashboard />} />

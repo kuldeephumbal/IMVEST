@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
     Box,
@@ -8,111 +8,57 @@ import {
     Button,
     Typography,
     InputAdornment,
-    IconButton,
     Link
 } from '@mui/material';
 import {
     Email,
-    Lock,
-    Visibility,
-    VisibilityOff
+    ArrowBack
 } from '@mui/icons-material';
 import { useToast } from '../contexts/ToastContext';
 import { adminAPI } from '../services/api';
 
-const Login = () => {
+const ForgotPassword = () => {
     const navigate = useNavigate();
-    const { showSuccess, showError} = useToast();
+    const { showSuccess, showError } = useToast();
     
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
-    
-    const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-
-    // Check if user is already logged in
-    useEffect(() => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const adminToken = localStorage.getItem('adminToken');
-        
-        if (isLoggedIn && adminToken) {
-            navigate('/dashboard');
-        } 
-    }, [navigate]);
-
-
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         // Validation
-        if (!formData.email || !formData.password) {
-            showError('Please fill in all fields');
+        if (!email) {
+            showError('Please enter your email address');
             setLoading(false);
             return;
         }
 
-        if (!formData.email.includes('@')) {
+        if (!email.includes('@')) {
             showError('Please enter a valid email address');
             setLoading(false);
             return;
         }
 
         try {
-            // Call the API
-            const response = await adminAPI.login({
-                email: formData.email,
-                password: formData.password
-            });
-
-            // Store data in localStorage
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('adminToken', response.token);
-            localStorage.setItem('adminData', JSON.stringify(response.admin));
-            localStorage.setItem('userRole', response.admin.role);
-            localStorage.setItem('userEmail', response.admin.email);
-
-            // Show success message based on detected role
-            const roleLabels = {
-                super_admin: 'Super Admin',
-                admin: 'Admin',
-                manager: 'Manager'
-            };
+            // Call the forgot password API
+            const response = await adminAPI.forgotPassword(email);
             
-            const roleLabel = roleLabels[response.admin.role] || 'Admin';
-            showSuccess(`Welcome back, ${response.admin.firstName}! You are logged in as ${roleLabel}`, {
-                autoClose: 3000
-            });
-
-            // Navigate to dashboard
+            showSuccess('OTP sent successfully to your email');
+            
+            // Navigate to OTP verification page with email
             setTimeout(() => {
-                navigate('/dashboard');
+                navigate('/verify-otp', { state: { email } });
             }, 1000);
 
         } catch (error) {
-            console.error('Login error:', error);
-            
-            // Set loading to false immediately
-            setLoading(false);
-            
-            // Show error message
+            console.error('Forgot password error:', error);
             const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
             showError(errorMessage);
+        } finally {
+            setLoading(false);
         }
-    };
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
     };
 
     return (
@@ -145,8 +91,11 @@ const Login = () => {
                         >
                             IMVEST
                         </Typography>
-                        <Typography variant="h6" color="text.secondary">
-                            Admin Login
+                        <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                            Forgot Password
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Enter your email address to receive a password reset OTP
                         </Typography>
                     </Box>
 
@@ -156,42 +105,14 @@ const Login = () => {
                             name="email"
                             type="email"
                             label="Email Address"
-                            value={formData.email}
-                            onChange={handleChange}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             margin="normal"
                             required
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
                                         <Email color="action" />
-                                    </InputAdornment>
-                                )
-                            }}
-                        />
-
-                        <TextField
-                            fullWidth
-                            name="password"
-                            type={showPassword ? 'text' : 'password'}
-                            label="Password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            margin="normal"
-                            required
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Lock color="action" />
-                                    </InputAdornment>
-                                ),
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            onClick={togglePasswordVisibility}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
                                     </InputAdornment>
                                 )
                             }}
@@ -213,23 +134,28 @@ const Login = () => {
                                 }
                             }}
                         >
-                            {loading ? 'Signing In...' : 'Sign In'}
+                            {loading ? 'Sending OTP...' : 'Send OTP'}
                         </Button>
                         
-                        <Box sx={{ textAlign: 'right', mt: 1 }}>
+                        <Box sx={{ textAlign: 'center', mt: 2 }}>
                             <Link
                                 component={RouterLink}
-                                to="/forgot-password"
+                                to="/login"
                                 sx={{
                                     color: '#3b82f6',
                                     textDecoration: 'none',
                                     fontSize: '14px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: 0.5,
                                     '&:hover': {
                                         textDecoration: 'underline'
                                     }
                                 }}
                             >
-                                Forgot Password?
+                                <ArrowBack fontSize="small" />
+                                Back to Login
                             </Link>
                         </Box>
                     </form>
@@ -239,4 +165,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default ForgotPassword; 
