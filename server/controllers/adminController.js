@@ -5,6 +5,87 @@ const OTP = require('../models/OTP');
 const { writeAuditLog } = require('../utils/auditLogger');
 const { sendOTPEmail, generateOTP } = require('../utils/emailService');
 
+// Register first super admin (no auth required - only works if no admins exist)
+async function registerFirstAdmin(req, res) {
+  try {
+    const { email, password, firstName, lastName, role, permissions } = req.body;
+
+    if (!email || !password || !firstName || !lastName) {
+      return res.status(400).json({ message: 'Email, password, first name, and last name are required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    // Check if any admin already exists
+    const existingAdmin = await Admin.findOne();
+    if (existingAdmin) {
+      return res.status(403).json({ 
+        message: 'Admin already exists in the system. Use the regular registration endpoint with proper authentication.' 
+      });
+    }
+
+    // Check if this specific email already exists
+    const existingEmail = await Admin.findOne({ email: email.toLowerCase() });
+    if (existingEmail) {
+      return res.status(400).json({ message: 'Admin with this email already exists' });
+    }
+
+    // Create the first super admin
+    const admin = new Admin({ 
+      email: email.toLowerCase(), 
+      password, 
+      firstName, 
+      lastName, 
+      role: role || 'super_admin', 
+      permissions: permissions || [
+        'approve_clients',
+        'manage_investments',
+        'view_reports',
+        'manage_contracts',
+        'system_settings',
+        'user_management'
+      ],
+      isActive: true
+    });
+    
+    await admin.save();
+
+    await writeAuditLog(req, { 
+      action: 'admin.create_first', 
+      status: 'success', 
+      target: { type: 'admin', id: admin._id, summary: `first admin: ${admin.email}` }, 
+      metadata: { createdRole: admin.role } 
+    });
+
+    const adminData = { 
+      id: admin._id, 
+      email: admin.email, 
+      firstName: admin.firstName, 
+      lastName: admin.lastName, 
+      role: admin.role, 
+      permissions: admin.permissions, 
+      isActive: admin.isActive, 
+      createdAt: admin.createdAt 
+    };
+
+    res.status(201).json({ 
+      message: 'First super admin created successfully! You can now login with these credentials.', 
+      admin: adminData 
+    });
+  } catch (error) {
+    console.error('First admin registration error:', error);
+    await writeAuditLog(req, { 
+      action: 'admin.create_first', 
+      status: 'failure', 
+      message: 'Server error during first admin create', 
+      metadata: { error: error?.message } 
+    });
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 // Register admin (requires user_management permission)
 async function register(req, res) {
   try {
@@ -796,6 +877,7 @@ async function getSystemHealth(req, res) {
 
 module.exports = {
   register,
+  registerFirstAdmin,
   login,
   getProfile,
   updateProfile,
