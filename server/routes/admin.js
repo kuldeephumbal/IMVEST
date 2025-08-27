@@ -3,6 +3,9 @@ const { adminAuth, requirePermission } = require('../middleware/adminAuth');
 const adminController = require('../controllers/adminController');
 const router = express.Router();
 
+// First Super Admin Registration (no auth required - only works if no admins exist)
+router.post('/register/first-admin', adminController.registerFirstAdmin);
+
 // Admin Registration (secured by permission: user_management)
 router.post('/register', adminAuth, requirePermission('user_management'), adminController.register);
 
