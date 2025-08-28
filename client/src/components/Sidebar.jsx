@@ -49,6 +49,7 @@ const Sidebar = ({ open, onClose }) => {
         const path = location.pathname;
         if (path === '/' || path === '/dashboard') return 'Dashboard';
         if (path === '/client-management') return 'Client Management';
+        if (path === '/contracts') return 'Contracts & Documents';
         return 'Dashboard';
     };
 
@@ -60,6 +61,7 @@ const Sidebar = ({ open, onClose }) => {
             const path = location.pathname;
             if (path === '/' || path === '/dashboard') return 'Dashboard';
             if (path === '/client-management') return 'Client Management';
+            if (path === '/contracts') return 'Contracts & Documents';
             return 'Dashboard';
         };
         setActiveItem(getActiveFromPath());
@@ -103,6 +105,11 @@ const Sidebar = ({ open, onClose }) => {
             title: 'Client Management',
             icon: <People />,
             path: '/client-management'
+        },
+        {
+            title: 'Contracts & Documents',
+            icon: <Description />,
+            path: '/contracts'
         }
     ];
 
@@ -136,19 +143,26 @@ const Sidebar = ({ open, onClose }) => {
                     <ListItemButton
                         onClick={() => handleItemClick(item)}
                         sx={{
-                            borderRadius: 1,
+                            borderRadius: 2,
                             mx: 1,
-                            backgroundColor: isActive ? 'rgba(59, 130, 246, 0.3)' : 'transparent',
+                            my: 0.5,
+                            backgroundColor: isActive ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
+                            border: isActive ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid transparent',
+                            backdropFilter: isActive ? 'blur(10px)' : 'none',
                             '&:hover': {
                                 backgroundColor: isActive
-                                    ? 'rgba(59, 130, 246, 0.4)'
-                                    : 'rgba(255, 255, 255, 0.1)'
-                            }
+                                    ? 'rgba(59, 130, 246, 0.3)'
+                                    : 'rgba(255, 255, 255, 0.1)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                backdropFilter: 'blur(10px)',
+                            },
+                            transition: 'all 0.3s ease'
                         }}
                     >
                         <ListItemIcon sx={{
-                            color: isActive ? '#3b82f6' : 'inherit',
-                            minWidth: 40
+                            color: isActive ? '#60a5fa' : 'rgba(255, 255, 255, 0.8)',
+                            minWidth: 40,
+                            transition: 'color 0.3s ease'
                         }}>
                             {item.icon}
                         </ListItemIcon>
@@ -156,8 +170,13 @@ const Sidebar = ({ open, onClose }) => {
                             primary={item.title}
                             sx={{
                                 '& .MuiListItemText-primary': {
-                                    color: isActive ? '#3b82f6' : 'inherit',
-                                    fontWeight: isActive ? 'bold' : 'normal'
+                                    color: isActive ? '#60a5fa' : 'rgba(255, 255, 255, 0.9)',
+                                    fontWeight: isActive ? '600' : '500',
+                                    fontSize: '0.95rem',
+                                    transition: 'all 0.3s ease',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
                                 }
                             }}
                         />
@@ -187,14 +206,20 @@ const Sidebar = ({ open, onClose }) => {
                                         <ListItemButton
                                             sx={{
                                                 pl: 6,
-                                                borderRadius: 1,
+                                                borderRadius: 2,
                                                 mx: 1,
-                                                backgroundColor: isChildActive ? 'rgba(59, 130, 246, 0.3)' : 'transparent',
+                                                my: 0.25,
+                                                backgroundColor: isChildActive ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
+                                                border: isChildActive ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid transparent',
+                                                backdropFilter: isChildActive ? 'blur(10px)' : 'none',
                                                 '&:hover': {
                                                     backgroundColor: isChildActive
-                                                        ? 'rgba(59, 130, 246, 0.4)'
-                                                        : 'rgba(255, 255, 255, 0.1)'
-                                                }
+                                                        ? 'rgba(59, 130, 246, 0.3)'
+                                                        : 'rgba(255, 255, 255, 0.1)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                    backdropFilter: 'blur(10px)'
+                                                },
+                                                transition: 'all 0.3s ease'
                                             }}
                                             onClick={() => handleChildClick(child, item.title)}
                                         >
@@ -202,8 +227,13 @@ const Sidebar = ({ open, onClose }) => {
                                                 primary={child}
                                                 sx={{
                                                     '& .MuiListItemText-primary': {
-                                                        color: isChildActive ? '#3b82f6' : 'inherit',
-                                                        fontWeight: isChildActive ? 'bold' : 'normal'
+                                                        color: isChildActive ? '#60a5fa' : 'rgba(255, 255, 255, 0.8)',
+                                                        fontWeight: isChildActive ? '600' : '500',
+                                                        fontSize: '0.9rem',
+                                                        transition: 'all 0.3s ease',
+                                                        whiteSpace: 'nowrap',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis'
                                                     }
                                                 }}
                                             />
@@ -223,11 +253,12 @@ const Sidebar = ({ open, onClose }) => {
             sx={{
                 width: drawerWidth,
                 height: '100%',
-                background: 'rgba(30, 41, 59, 0.1)',
+                background: '#060606',
                 backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
                 color: 'rgba(255, 255, 255, 0.9)',
                 overflow: 'hidden',
+                overflowX: 'hidden',
                 position: 'relative',
                 '&::before': {
                     content: '""',
@@ -236,13 +267,26 @@ const Sidebar = ({ open, onClose }) => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: 'rgba(30, 41, 59, 0.2)',
+                    background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.3) 0%, rgba(15, 23, 42, 0.4) 100%)',
                     zIndex: -1
                 }
             }}
         >
-            <Box sx={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2 }}>
-                <Typography variant="h6" sx={{ color: '#3b82f6', fontWeight: 'bold' }}>
+            <Box sx={{
+                height: 64,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                px: 2,
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(10px)'
+            }}>
+                <Typography variant="h6" sx={{
+                    color: '#60a5fa',
+                    fontWeight: '700',
+                    fontSize: '1.3rem',
+                }}>
                     IMVEST
                 </Typography>
                 {isMobile && (
@@ -253,9 +297,13 @@ const Sidebar = ({ open, onClose }) => {
             </Box>
             <List sx={{
                 px: 1,
-                overflow: 'auto',
+                overflowY: 'auto',
+                overflowX: 'hidden',
                 height: 'calc(100vh - 64px)',
                 '&::-webkit-scrollbar': {
+                    display: 'none'
+                },
+                '&::-webkit-scrollbar-horizontal': {
                     display: 'none'
                 },
                 scrollbarWidth: 'none',
@@ -284,9 +332,12 @@ const Sidebar = ({ open, onClose }) => {
                     zIndex: theme.zIndex.drawer,
                     transform: open ? 'translateX(0)' : `translateX(-${drawerWidth}px)`,
                     transition: 'transform 0.3s ease',
-                    background: 'rgba(30, 41, 59, 0.1) !important',
+                    background: 'rgba(30, 41, 59, 0.95) !important',
                     backdropFilter: 'blur(20px)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                    borderRight: '1px solid rgba(255, 255, 255, 0.2)',
+                    overflow: 'hidden',
+                    overflowX: 'hidden',
                     '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -294,7 +345,7 @@ const Sidebar = ({ open, onClose }) => {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        background: 'rgba(30, 41, 59, 0.2)',
+                        background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.3) 0%, rgba(15, 23, 42, 0.4) 100%)',
                         zIndex: -1
                     }
                 }
