@@ -6,13 +6,12 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './index.css';
 import App from './App';
 import Dashboard from './pages/Dashboard';
-import Users from './pages/Users';
+import ClientManagement from './pages/ClientManagement';
+import ClientDetails from './pages/ClientDetails';
+import ContractAndDocuments from './pages/ContractAndDocuments';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
-import ForgotPassword from './pages/ForgotPassword';
-import VerifyOTP from './pages/VerifyOTP';
-import ResetPassword from './pages/ResetPassword';
 import { ToastProvider } from './contexts/ToastContext';
 
 createRoot(document.getElementById('root')).render(
@@ -21,14 +20,13 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/verify-otp" element={<VerifyOTP />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/*" element={<App>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/users" element={<Users />} />
+              <Route path="/client-management" element={<ClientManagement />} />
+              <Route path="/client-details/:clientId" element={<ClientDetails />} />
+              <Route path="/contracts" element={<ContractAndDocuments />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<div>Page Not Found</div>} />
