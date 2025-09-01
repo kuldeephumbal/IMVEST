@@ -13,9 +13,13 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('adminToken');
+    // Try both token keys - adminToken (old) and token (new)
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('API Request with token:', config.url);
+    } else {
+      console.log('API Request without token:', config.url);
     }
     return config;
   },
