@@ -337,8 +337,58 @@ const ClientManagement = () => {
         handleCloseActionMenu();
     };
 
+    const handleUpdateClientStatus = async (clientId, status) => {
+        try {
+            setStatusUpdateLoading(true);
+            await clientAPI.updateClientStatus(clientId, status);
+            
+            // Update the client in the local state
+            setClients(prevClients => 
+                prevClients.map(client => 
+                    client.id === clientId ? 
+                        { 
+                            ...client, 
+                            status: status === 'approved' ? 'Active' : 'Suspended' 
+                        } : client
+                )
+            );
+            
+            setNotification({
+                open: true,
+                message: `Client ${status === 'approved' ? 'approved' : 'rejected'} successfully`,
+                type: 'success'
+            });
+            
+        } catch (error) {
+            console.error(`Failed to ${status} client:`, error);
+            setNotification({
+                open: true,
+                message: `Failed to ${status} client: ${error.message || 'Unknown error'}`,
+                type: 'error'
+            });
+        } finally {
+            setStatusUpdateLoading(false);
+        }
+    };
+
     return (
         <>
+            {/* Notification Snackbar */}
+            <Snackbar
+                open={notification.open}
+                autoHideDuration={6000}
+                onClose={() => setNotification({...notification, open: false})}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+                <Alert 
+                    severity={notification.type} 
+                    onClose={() => setNotification({...notification, open: false})}
+                    sx={{ width: '100%' }}
+                >
+                    {notification.message}
+                </Alert>
+            </Snackbar>
+
             <Box sx={{ mb: 3 }}>
                 <Typography variant="body2" color="primary">
                     Home / Client Management
@@ -475,22 +525,27 @@ const ClientManagement = () => {
                                             >
                                                 <Visibility fontSize="small" />
                                             </IconButton>
-                                            <IconButton
-                                                size="small"
-                                                sx={{ color: '#34d399' }}
-                                                onClick={() => handleContactClient(client)}
-                                                title="Contact Client"
-                                            >
-                                                <Email fontSize="small" />
-                                            </IconButton>
-                                            <IconButton
-                                                size="small"
-                                                sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
-                                                onClick={(e) => handleActionMenu(e, client)}
-                                                title="More Actions"
-                                            >
-                                                <MoreVert fontSize="small" />
-                                            </IconButton>
+                                            
+                                            {client.status === 'Pending' && (
+                                                <>
+                                                    <IconButton
+                                                        size="small"
+                                                        sx={{ color: '#4ade80' }}
+                                                        onClick={() => handleUpdateClientStatus(client.id, 'approved')}
+                                                        title="Approve Client"
+                                                    >
+                                                        <CheckCircle fontSize="small" />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        size="small"
+                                                        sx={{ color: '#f87171' }}
+                                                        onClick={() => handleUpdateClientStatus(client.id, 'rejected')}
+                                                        title="Reject Client"
+                                                    >
+                                                        <Cancel fontSize="small" />
+                                                    </IconButton>
+                                                </>
+                                            )}
                                         </Box>
                                     </TableCell>
                                 </TableRow>

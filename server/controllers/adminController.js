@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const Admin = require('../models/Admin');
 const Client = require('../models/Client');
 const OTP = require('../models/OTP');
@@ -509,18 +510,34 @@ async function getClientDetails(req, res) {
   try {
     const { clientId } = req.params;
     
+    if (!mongoose.Types.ObjectId.isValid(clientId)) {
+      return res.status(400).json({ message: 'Invalid client ID format' });
+    }
+    
     const client = await Client.findById(clientId).select('-password');
     if (!client) return res.status(404).json({ message: 'Client not found' });
 
     // Get transaction summary
     const Transaction = require('../models/Transaction');
-    const balance = await Transaction.getClientBalance(clientId);
+    let balance = { totalDeposits: 0, totalWithdrawals: 0, totalInterest: 0, totalFees: 0, currentBalance: 0 };
+    try {
+      balance = await Transaction.getClientBalance(clientId);
+    } catch (balanceError) {
+      console.error('Error fetching client balance:', balanceError);
+      // Continue with default balance values
+    }
 
     // Get recent transactions
-    const recentTransactions = await Transaction.find({ client: clientId })
-      .sort({ createdAt: -1 })
-      .limit(10)
-      .lean();
+    let recentTransactions = [];
+    try {
+      recentTransactions = await Transaction.find({ client: clientId })
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .lean();
+    } catch (transactionError) {
+      console.error('Error fetching client transactions:', transactionError);
+      // Continue with empty transactions array
+    }
 
     res.json({
       client,
@@ -570,6 +587,121 @@ async function updateClientStatus(req, res) {
     res.json({ message: 'Client status updated successfully', client });
   } catch (error) {
     console.error('Update client status error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Update client details
+async function updateClient(req, res) {
+  try {
+    const { clientId } = req.params;
+    const { 
+      firstName, 
+      lastName, 
+      email, 
+      phone, 
+      status, 
+      investmentPlan, 
+      address 
+    } = req.body;
+
+    // Validate email if changing
+    if (email) {
+      const existingClient = await Client.findOne({ 
+        email, 
+        _id: { $ne: clientId } 
+      });
+      
+      if (existingClient) {
+        return res.status(400).json({ 
+          message: 'Email is already in use by another client' 
+        });
+      }
+    }
+
+    // Check if client exists
+    const client = await Client.findById(clientId);
+    if (!client) {
+      return res.status(404).json({ message: 'Client not found' });
+    }
+
+    // Update client data
+    const updates = {};
+    if (firstName) updates.firstName = firstName;
+    if (lastName) updates.lastName = lastName;
+    if (email) updates.email = email;
+    if (phone) updates.phone = phone;
+    if (status && ['pending', 'approved', 'declined', 'suspended', 'active'].includes(status)) {
+      updates.status = status;
+    }
+    if (investmentPlan && ['8%_compounded', '6%_simple', '12%_futures', '14%_futures'].includes(investmentPlan)) {
+      updates.investmentPlan = investmentPlan;
+    }
+    if (address && typeof address === 'object') {
+      updates.address = {};
+      if (address.street) updates.address.street = address.street;
+      if (address.city) updates.address.city = address.city;
+      if (address.state) updates.address.state = address.state;
+      if (address.zipCode) updates.address.zipCode = address.zipCode;
+      if (address.country) updates.address.country = address.country;
+    }
+
+    // Update client record
+    const updatedClient = await Client.findByIdAndUpdate(
+      clientId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    await writeAuditLog(req, {
+      action: 'admin.client.update',
+      status: 'success',
+      target: { type: 'client', id: clientId, summary: `client: ${client.email}` },
+      metadata: { updates: Object.keys(updates) }
+    });
+
+    res.json({ 
+      message: 'Client updated successfully', 
+      client: updatedClient 
+    });
+  } catch (error) {
+    console.error('Update client error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+// Delete client
+async function deleteClient(req, res) {
+  try {
+    const { clientId } = req.params;
+    
+    // Check if client exists
+    const client = await Client.findById(clientId);
+    if (!client) {
+      return res.status(404).json({ message: 'Client not found' });
+    }
+    
+    // Store client email for audit log
+    const clientEmail = client.email;
+    
+    // Delete client's transactions
+    await Transaction.deleteMany({ client: clientId });
+    
+    // Delete the client
+    await Client.findByIdAndDelete(clientId);
+    
+    await writeAuditLog(req, {
+      action: 'admin.client.delete',
+      status: 'success',
+      target: { type: 'client', id: clientId, summary: `client: ${clientEmail}` },
+      metadata: { clientDeleted: true }
+    });
+    
+    res.json({ 
+      message: 'Client and all associated data deleted successfully' 
+    });
+  } catch (error) {
+    console.error('Delete client error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 }
@@ -889,6 +1021,8 @@ module.exports = {
   getAllClients,
   getClientDetails,
   updateClientStatus,
+  updateClient,
+  deleteClient,
   getClientDocuments,
   getDashboardOverview,
   getFinancialReports,

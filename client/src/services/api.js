@@ -203,6 +203,26 @@ export const clientAPI = {
     }
   },
 
+  // Update client details
+  updateClient: async (clientId, updateData) => {
+    try {
+      const response = await api.put(`/admin/clients/${clientId}`, updateData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update client' };
+    }
+  },
+
+  // Delete client
+  deleteClient: async (clientId) => {
+    try {
+      const response = await api.delete(`/admin/clients/${clientId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete client' };
+    }
+  },
+
   // Get client documents
   getClientDocuments: async (clientId) => {
     try {

@@ -43,6 +43,24 @@ export ADMIN_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 Register a new client with KYC documents.
 
 ```bash
+# JSON Request Version
+curl -X POST http://localhost:5000/api/client/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1 (555) 123-4567",
+    "dateOfBirth": "1985-06-15",
+    "ssn": "123-45-6789",
+    "address": "{\"street\":\"123 Main St\",\"city\":\"New York\",\"state\":\"NY\",\"zipCode\":\"10001\",\"country\":\"USA\"}",
+    "investmentPlan": "Premium",
+    "initialInvestment": "25000",
+    "referralCode": "REF123",
+    "password": "securePassword123!"
+  }'
+
+# Multipart Form-Data Version (with document uploads)
 curl -X POST http://localhost:5000/api/client/register \
   -H "Content-Type: multipart/form-data" \
   -F "firstName=John" \
@@ -723,4 +741,219 @@ echo "🎉 All API tests completed!"
 7. **Real-time Updates**: Some endpoints support real-time updates via WebSocket (if implemented)
 8. **Rate Limiting**: API calls are rate-limited to prevent abuse
 9. **Audit Logging**: All admin actions are automatically logged for compliance
+
+---
+
+## Admin Client Management APIs
+
+### 1. Get All Clients (GET)
+Get a list of all clients with filtering and pagination.
+
+```bash
+# Get all clients
+curl -X GET http://localhost:5000/api/admin/clients \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+
+# Get with pagination and filtering
+curl -X GET "http://localhost:5000/api/admin/clients?page=1&limit=10&status=pending" \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+```
+
+**Response:**
+```json
+{
+  "clients": [
+    {
+      "_id": "65f3a1b2c3d4e5f6a7b8c9d0",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@example.com",
+      "phone": "+1 (555) 123-4567",
+      "status": "pending",
+      "investmentPlan": "Premium",
+      "createdAt": "2023-09-15T10:30:00.000Z",
+      "lastActivity": "2023-09-15T10:30:00.000Z"
+    },
+    // More clients...
+  ],
+  "pagination": {
+    "total": 45,
+    "page": 1,
+    "limit": 10,
+    "pages": 5
+  }
+}
+```
+
+### 2. Get Client Details (GET)
+Get detailed information about a specific client.
+
+```bash
+curl -X GET http://localhost:5000/api/admin/clients/65f3a1b2c3d4e5f6a7b8c9d0 \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+```
+
+**Response:**
+```json
+{
+  "client": {
+    "_id": "65f3a1b2c3d4e5f6a7b8c9d0",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1 (555) 123-4567",
+    "dateOfBirth": "1985-06-15",
+    "ssn": "***-**-6789",
+    "address": {
+      "street": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "zipCode": "10001",
+      "country": "USA"
+    },
+    "investmentPlan": "Premium",
+    "initialInvestment": 25000,
+    "currentValue": 26500,
+    "status": "pending",
+    "createdAt": "2023-09-15T10:30:00.000Z",
+    "lastActivity": "2023-09-15T10:30:00.000Z",
+    "riskProfile": "Aggressive",
+    "referralCode": "REF123"
+  },
+  "documents": [
+    {
+      "_id": "65f3a1b2c3d4e5f6a7b8c9d1",
+      "type": "ID",
+      "filename": "drivers_license.jpg",
+      "uploadDate": "2023-09-15T10:30:00.000Z",
+      "status": "verified"
+    },
+    {
+      "_id": "65f3a1b2c3d4e5f6a7b8c9d2",
+      "type": "ProofOfAddress",
+      "filename": "utility_bill.pdf",
+      "uploadDate": "2023-09-15T10:30:00.000Z",
+      "status": "verified"
+    }
+  ],
+  "transactions": [
+    {
+      "_id": "65f3a1b2c3d4e5f6a7b8c9d3",
+      "type": "deposit",
+      "amount": 25000,
+      "status": "completed",
+      "date": "2023-09-15T10:35:00.000Z"
+    }
+  ]
+}
+```
+
+### 3. Update Client Status (PUT)
+Update a client's status (approve or reject).
+
+```bash
+curl -X PUT http://localhost:5000/api/admin/clients/65f3a1b2c3d4e5f6a7b8c9d0/status \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "status": "approved"
+  }'
+```
+
+**Response:**
+```json
+{
+  "message": "Client status updated successfully",
+  "client": {
+    "_id": "65f3a1b2c3d4e5f6a7b8c9d0",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "status": "approved",
+    "updatedAt": "2023-09-16T14:20:00.000Z"
+  }
+}
+```
+
+### 4. Get Client Documents (GET)
+Get all documents uploaded by a client.
+
+```bash
+curl -X GET http://localhost:5000/api/admin/clients/65f3a1b2c3d4e5f6a7b8c9d0/documents \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+```
+
+**Response:**
+```json
+{
+  "documents": [
+    {
+      "_id": "65f3a1b2c3d4e5f6a7b8c9d1",
+      "clientId": "65f3a1b2c3d4e5f6a7b8c9d0",
+      "type": "ID",
+      "filename": "drivers_license.jpg",
+      "path": "/uploads/documents/65f3a1b2c3d4e5f6a7b8c9d0/drivers_license.jpg",
+      "mimeType": "image/jpeg",
+      "size": 2458745,
+      "uploadDate": "2023-09-15T10:30:00.000Z",
+      "status": "verified",
+      "verifiedBy": "65f3a1b2c3d4e5f6a7b8c9e1",
+      "verifiedAt": "2023-09-15T14:20:00.000Z"
+    },
+    {
+      "_id": "65f3a1b2c3d4e5f6a7b8c9d2",
+      "clientId": "65f3a1b2c3d4e5f6a7b8c9d0",
+      "type": "ProofOfAddress",
+      "filename": "utility_bill.pdf",
+      "path": "/uploads/documents/65f3a1b2c3d4e5f6a7b8c9d0/utility_bill.pdf",
+      "mimeType": "application/pdf",
+      "size": 1245678,
+      "uploadDate": "2023-09-15T10:30:00.000Z",
+      "status": "verified",
+      "verifiedBy": "65f3a1b2c3d4e5f6a7b8c9e1",
+      "verifiedAt": "2023-09-15T14:20:00.000Z"
+    }
+  ]
+}
+```
+
+### 5. Delete Client Account (DELETE)
+Delete a client account (admin only).
+
+```bash
+curl -X DELETE http://localhost:5000/api/admin/clients/65f3a1b2c3d4e5f6a7b8c9d0 \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+```
+
+**Response:**
+```json
+{
+  "message": "Client account deleted successfully",
+  "deletedClient": {
+    "_id": "65f3a1b2c3d4e5f6a7b8c9d0",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+### Windows PowerShell Examples
+
+For Windows PowerShell, you may need to modify the commands as follows:
+
+```powershell
+# Get all clients
+Invoke-RestMethod -Method GET -Uri "http://localhost:5000/api/admin/clients" `
+  -Headers @{"Authorization"="Bearer $env:ADMIN_TOKEN"}
+
+# Get client details
+Invoke-RestMethod -Method GET -Uri "http://localhost:5000/api/admin/clients/65f3a1b2c3d4e5f6a7b8c9d0" `
+  -Headers @{"Authorization"="Bearer $env:ADMIN_TOKEN"}
+
+# Update client status
+Invoke-RestMethod -Method PUT -Uri "http://localhost:5000/api/admin/clients/65f3a1b2c3d4e5f6a7b8c9d0/status" `
+  -Headers @{"Authorization"="Bearer $env:ADMIN_TOKEN"; "Content-Type"="application/json"} `
+  -Body '{"status": "approved"}'
+```
 10. **Data Validation**: All input data is validated before processing 
