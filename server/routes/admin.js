@@ -50,6 +50,12 @@ router.get('/clients/:clientId', adminAuth, requirePermission('view_reports'), a
 // Update client status
 router.put('/clients/:clientId/status', adminAuth, requirePermission('approve_clients'), adminController.updateClientStatus);
 
+// Update client details
+router.put('/clients/:clientId', adminAuth, requirePermission('approve_clients'), adminController.updateClient);
+
+// Delete client
+router.delete('/clients/:clientId', adminAuth, requirePermission('approve_clients'), adminController.deleteClient);
+
 // ============================================================================
 // ADMIN DASHBOARD - DOCUMENT MANAGEMENT
 // ============================================================================
