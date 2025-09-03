@@ -31,7 +31,9 @@ import {
     Widgets,
     Pages,
     MenuBook,
-    Close
+    Close,
+    Message,
+    Schedule
 } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 
@@ -50,6 +52,8 @@ const Sidebar = ({ open, onClose }) => {
         if (path === '/' || path === '/dashboard') return 'Dashboard';
         if (path === '/client-management') return 'Client Management';
         if (path === '/contracts') return 'Contracts & Documents';
+        if (path === '/communication') return 'Communication System';
+        if (path === '/scheduling') return 'Scheduling & Automation';
         return 'Dashboard';
     };
 
@@ -62,6 +66,8 @@ const Sidebar = ({ open, onClose }) => {
             if (path === '/' || path === '/dashboard') return 'Dashboard';
             if (path === '/client-management') return 'Client Management';
             if (path === '/contracts') return 'Contracts & Documents';
+            if (path === '/communication') return 'Communication System';
+            if (path === '/scheduling') return 'Scheduling & Automation';
             return 'Dashboard';
         };
         setActiveItem(getActiveFromPath());
@@ -110,6 +116,16 @@ const Sidebar = ({ open, onClose }) => {
             title: 'Contracts & Documents',
             icon: <Description />,
             path: '/contracts'
+        },
+        {
+            title: 'Communication System',
+            icon: <Message />,
+            path: '/communication'
+        },
+        {
+            title: 'Scheduling & Automation',
+            icon: <Schedule />,
+            path: '/scheduling'
         }
     ];
 

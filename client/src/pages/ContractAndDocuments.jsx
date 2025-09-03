@@ -33,6 +33,7 @@ import {
     InputAdornment,
     Autocomplete
 } from '@mui/material';
+import CustomBreadcrumb from '../components/CustomBreadcrumb';
 import {
     Add,
     Upload,
@@ -371,18 +372,14 @@ const ContractAndDocuments = () => {
 
     return (
         <>
-            <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                    Home / Contract & Documents
-                </Typography>
-            </Box>
+            <CustomBreadcrumb />
 
             <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3, color: 'white' }}>
                 Contract & Documents Management
             </Typography>
 
             {/* Summary Cards */}
-            <div className="container-fluid mb-4 ">
+            {/* <div className="container-fluid mb-4 ">
                 <div className="row">
                     <div className="col-12 col-md-3 mb-3">
                         <Card sx={{
@@ -457,7 +454,7 @@ const ContractAndDocuments = () => {
                         </Card>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* Main Content */}
             <Card sx={{
