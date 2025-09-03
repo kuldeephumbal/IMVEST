@@ -135,36 +135,75 @@ transactionSchema.methods.getSummary = function() {
 
 // Static method to get client balance
 transactionSchema.statics.getClientBalance = async function(clientId) {
-  const result = await this.aggregate([
-    { $match: { client: mongoose.Types.ObjectId(clientId), status: 'completed' } },
-    {
-      $group: {
-        _id: null,
-        totalDeposits: {
-          $sum: {
-            $cond: [{ $eq: ['$type', 'deposit'] }, '$amount', 0]
-          }
-        },
-        totalWithdrawals: {
-          $sum: {
-            $cond: [{ $eq: ['$type', 'withdrawal'] }, '$amount', 0]
-          }
-        },
-        totalInterest: {
-          $sum: {
-            $cond: [{ $eq: ['$type', 'interest_payment'] }, '$amount', 0]
-          }
-        },
-        totalFees: {
-          $sum: {
-            $cond: [{ $eq: ['$type', 'fee'] }, '$amount', 0]
+  try {
+    // Convert clientId to ObjectId if it's a string
+    let clientObjectId;
+    try {
+      clientObjectId = typeof clientId === 'string' ? 
+        new mongoose.Types.ObjectId(clientId) : clientId;
+    } catch (error) {
+      console.error("Error converting clientId to ObjectId:", error);
+      return {
+        totalDeposits: 0,
+        totalWithdrawals: 0,
+        totalInterest: 0,
+        totalFees: 0,
+        currentBalance: 0
+      };
+    }
+    
+    const result = await this.aggregate([
+      { $match: { client: clientObjectId, status: 'completed' } },
+      {
+        $group: {
+          _id: null,
+          totalDeposits: {
+            $sum: {
+              $cond: [{ $eq: ['$type', 'deposit'] }, '$amount', 0]
+            }
+          },
+          totalWithdrawals: {
+            $sum: {
+              $cond: [{ $eq: ['$type', 'withdrawal'] }, '$amount', 0]
+            }
+          },
+          totalInterest: {
+            $sum: {
+              $cond: [{ $eq: ['$type', 'interest_payment'] }, '$amount', 0]
+            }
+          },
+          totalFees: {
+            $sum: {
+              $cond: [{ $eq: ['$type', 'fee'] }, '$amount', 0]
+            }
           }
         }
       }
+    ]);
+    
+    if (result.length === 0) {
+      return {
+        totalDeposits: 0,
+        totalWithdrawals: 0,
+        totalInterest: 0,
+        totalFees: 0,
+        currentBalance: 0
+      };
     }
-  ]);
-  
-  if (result.length === 0) {
+    
+    const { totalDeposits, totalWithdrawals, totalInterest, totalFees } = result[0];
+    const currentBalance = totalDeposits + totalInterest - totalWithdrawals - totalFees;
+    
+    return {
+      totalDeposits,
+      totalWithdrawals,
+      totalInterest,
+      totalFees,
+      currentBalance
+    };
+  } catch (error) {
+    console.error("Error in getClientBalance:", error);
+    // Return default values in case of error
     return {
       totalDeposits: 0,
       totalWithdrawals: 0,
@@ -173,17 +212,6 @@ transactionSchema.statics.getClientBalance = async function(clientId) {
       currentBalance: 0
     };
   }
-  
-  const { totalDeposits, totalWithdrawals, totalInterest, totalFees } = result[0];
-  const currentBalance = totalDeposits + totalInterest - totalWithdrawals - totalFees;
-  
-  return {
-    totalDeposits,
-    totalWithdrawals,
-    totalInterest,
-    totalFees,
-    currentBalance
-  };
 };
 
 module.exports = mongoose.model('Transaction', transactionSchema); 

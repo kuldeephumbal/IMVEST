@@ -22,7 +22,7 @@ import { adminAPI } from '../services/api';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { showSuccess, showError} = useToast();
+    const { showSuccess, showError } = useToast();
     
     const [formData, setFormData] = useState({
         email: '',
@@ -39,7 +39,7 @@ const Login = () => {
         
         if (isLoggedIn && adminToken) {
             navigate('/dashboard');
-        } 
+        }
     }, [navigate]);
 
 
