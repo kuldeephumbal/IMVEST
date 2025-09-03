@@ -76,13 +76,6 @@ const calculateGain = (current, initial) => {
     };
 };
 
-// Helper function to format date
-const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-};
-
 const ClientManagement = () => {
     const navigate = useNavigate();
     const [clients, setClients] = useState([]);
@@ -93,13 +86,6 @@ const ClientManagement = () => {
     const [selectedClientForAction, setSelectedClientForAction] = useState(null);
     const [notification, setNotification] = useState({ open: false, message: '', type: 'success' });
     const [statusUpdateLoading, setStatusUpdateLoading] = useState(false);
-    
-    // Client detail dialog state
-    const [detailsOpen, setDetailsOpen] = useState(false);
-    const [selectedClient, setSelectedClient] = useState(null);
-    const [documents, setDocuments] = useState([]);
-    const [loadingDocuments, setLoadingDocuments] = useState(false);
-    const [activeTab, setActiveTab] = useState(0);
 
     // Fetch all clients on component mount
     useEffect(() => {

@@ -16,6 +16,7 @@ import {
     DialogContent,
     DialogActions
 } from '@mui/material';
+import CustomBreadcrumb from '../components/CustomBreadcrumb';
 import {
     Edit,
     Save,
@@ -171,11 +172,7 @@ const Profile = () => {
 
     return (
         <>
-            <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                    Home / Profile
-                </Typography>
-            </Box>
+            <CustomBreadcrumb />
 
             {successMessage && (
                 <Alert

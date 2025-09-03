@@ -34,7 +34,7 @@ const Settings = () => {
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [notification, setNotification] = useState({ open: false, message: '', type: 'success' });
     const [activeTab, setActiveTab] = useState(0);
-    
+
     // Mock data for testing (this would normally come from API)
     const mockProfileData = {
         firstName: 'John',
@@ -43,7 +43,7 @@ const Settings = () => {
         role: localStorage.getItem('userRole') || 'admin',
         permissions: ['approve_clients', 'view_reports', 'user_management']
     };
-    
+
     // Profile settings state
     const [profileSettings, setProfileSettings] = useState({
         firstName: '',
@@ -52,7 +52,7 @@ const Settings = () => {
         role: '',
         permissions: []
     });
-    
+
     // Password change state
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
@@ -73,7 +73,7 @@ const Settings = () => {
         console.log('Settings component mounted');
         fetchProfileData();
     }, []);
-    
+
     // Debug log whenever profile settings change
     useEffect(() => {
         console.log('Current profile settings:', profileSettings);
@@ -82,14 +82,14 @@ const Settings = () => {
     const fetchProfileData = async () => {
         try {
             setLoadingProfile(true);
-            
+
             // Attempt to get profile from API
             const response = await adminAPI.getProfile();
             console.log('API Response:', response);
-            
+
             // Check if response has data property (common API pattern)
             const userData = response.data || response;
-            
+
             if (userData && userData.firstName) {
                 // API returned valid data
                 setProfileSettings({
@@ -104,22 +104,22 @@ const Settings = () => {
                 console.log('Using mock data due to incomplete API response');
                 setProfileSettings(mockProfileData);
             }
-            
+
             console.log('Profile settings after update:', profileSettings);
             setLoadingProfile(false);
         } catch (error) {
             console.error('Failed to fetch profile:', error);
-            
+
             // API failed, use mock data
             console.log('Using mock data due to API error');
             setProfileSettings(mockProfileData);
-            
+
             setNotification({
                 open: true,
                 message: 'Could not load profile data from server, using default values',
                 type: 'warning'
             });
-            
+
             setLoadingProfile(false);
         }
     };
@@ -157,7 +157,7 @@ const Settings = () => {
                 lastName: profileSettings.lastName,
                 email: profileSettings.email
             });
-            
+
             setNotification({
                 open: true,
                 message: 'Profile updated successfully',
@@ -201,13 +201,13 @@ const Settings = () => {
                 currentPassword: passwordData.currentPassword,
                 newPassword: passwordData.newPassword
             });
-            
+
             setPasswordData({
                 currentPassword: '',
                 newPassword: '',
                 confirmPassword: ''
             });
-            
+
             setNotification({
                 open: true,
                 message: 'Password changed successfully',
@@ -237,20 +237,20 @@ const Settings = () => {
 
     return (
         <>
-            <Snackbar 
-                open={notification.open} 
-                autoHideDuration={6000} 
-                onClose={() => setNotification({...notification, open: false})}
+            <Snackbar
+                open={notification.open}
+                autoHideDuration={6000}
+                onClose={() => setNotification({ ...notification, open: false })}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-                <Alert 
+                <Alert
                     severity={notification.type}
                     action={
                         <IconButton
                             size="small"
                             aria-label="close"
                             color="inherit"
-                            onClick={() => setNotification({...notification, open: false})}
+                            onClick={() => setNotification({ ...notification, open: false })}
                         >
                             <Close fontSize="small" />
                         </IconButton>

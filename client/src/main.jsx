@@ -14,6 +14,8 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import CommunicationSystem from './pages/CommunicationSystem';
+import SchedulingAutomation from './pages/SchedulingAutomation';
 import { ToastProvider } from './contexts/ToastContext';
 
 createRoot(document.getElementById('root')).render(
@@ -31,6 +33,8 @@ createRoot(document.getElementById('root')).render(
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/client-management" element={<ClientManagement />} />
               <Route path="/client-details/:clientId" element={<ClientDetails />} />
+              <Route path="/communication" element={<CommunicationSystem />} />
+              <Route path="/scheduling" element={<SchedulingAutomation />} />
               <Route path="/contracts" element={<ContractAndDocuments />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />

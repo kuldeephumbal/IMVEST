@@ -14,6 +14,7 @@ import {
   TrendingDown,
   MoreVert
 } from '@mui/icons-material';
+import CustomBreadcrumb from '../components/CustomBreadcrumb';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -304,11 +305,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="body2" color="primary">
-          Home / Dashboard
-        </Typography>
-      </Box>
+      <CustomBreadcrumb />
 
       <div className="container-fluid">
         <div className="row">
