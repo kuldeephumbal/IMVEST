@@ -31,8 +31,6 @@ import {
     Alert,
     LinearProgress,
     Divider,
-    Paper,
-    Grid,
     Switch,
     FormControlLabel,
 } from '@mui/material';
@@ -414,214 +412,241 @@ const SchedulingAutomation = () => {
         <>
             <CustomBreadcrumb />
 
-            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3, color: 'white' }}>
-                Scheduling & Automation
-            </Typography>
+            {/* Page Header */}
+            <div className="container-fluid mb-4">
+                <div className="row align-items-center">
+                    <div className="col">
+                        <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'white', mb: 1 }}>
+                            Scheduling & Automation
+                        </Typography>
+                    </div>
+                </div>
+            </div>
 
-            {/* Summary Cards */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} sm={6} md={3}>
-                    <Card sx={{
-                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%)',
-                        backdropFilter: 'blur(20px)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '16px',
-                        color: 'white'
-                    }}>
-                        <CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Box>
-                                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                                        {automatedReminders.filter(r => r.status === 'pending').length}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                                        Pending Reminders
-                                    </Typography>
-                                </Box>
-                                <NotificationsActive sx={{ fontSize: 40, opacity: 0.8 }} />
-                            </Box>
-                        </CardContent>
-                    </Card>
-                </Grid>
+            {/* Stats Cards */}
+            {/* <div className="container-fluid mb-4">
+                <div className="row g-4">
+                    <div className="col-lg-3 col-md-6">
+                        <Card sx={{
+                            background: 'rgba(59, 130, 246, 0.1)',
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(59, 130, 246, 0.2)',
+                            borderRadius: '20px'
+                        }}>
+                            <CardContent sx={{ textAlign: 'center' }}>
+                                <NotificationsActive sx={{ fontSize: 40, color: '#60a5fa', mb: 2 }} />
+                                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'white' }}>
+                                    {automatedReminders.length}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                    Active Reminders
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                        <Card sx={{
+                            background: 'rgba(34, 197, 94, 0.1)',
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(34, 197, 94, 0.2)',
+                            borderRadius: '20px'
+                        }}>
+                            <CardContent sx={{ textAlign: 'center' }}>
+                                <Assignment sx={{ fontSize: 40, color: '#4ade80', mb: 2 }} />
+                                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'white' }}>
+                                    {taskReminders.length}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                    Task Reminders
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                        <Card sx={{
+                            background: 'rgba(168, 85, 247, 0.1)',
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(168, 85, 247, 0.2)',
+                            borderRadius: '20px'
+                        }}>
+                            <CardContent sx={{ textAlign: 'center' }}>
+                                <CheckCircle sx={{ fontSize: 40, color: '#a855f7', mb: 2 }} />
+                                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'white' }}>
+                                    {[...automatedReminders, ...taskReminders].filter(item => item.status === 'completed').length}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                    Completed Tasks
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                        <Card sx={{
+                            background: 'rgba(245, 158, 11, 0.1)',
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(245, 158, 11, 0.2)',
+                            borderRadius: '20px'
+                        }}>
+                            <CardContent sx={{ textAlign: 'center' }}>
+                                <Autorenew sx={{ fontSize: 40, color: '#f59e0b', mb: 2 }} />
+                                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'white' }}>
+                                    {automationRules.filter(rule => rule.enabled).length}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                    Active Rules
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            </div> */}
 
-                <Grid item xs={12} sm={6} md={3}>
-                    <Card sx={{
-                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(52, 211, 153, 0.2) 100%)',
-                        backdropFilter: 'blur(20px)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '16px',
-                        color: 'white'
-                    }}>
-                        <CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Box>
-                                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                                        {taskReminders.filter(t => t.status === 'pending' || t.status === 'in_progress').length}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                                        Active Tasks
-                                    </Typography>
-                                </Box>
-                                <TaskAlt sx={{ fontSize: 40, opacity: 0.8 }} />
-                            </Box>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                    <Card sx={{
-                        background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(251, 191, 36, 0.2) 100%)',
-                        backdropFilter: 'blur(20px)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '16px',
-                        color: 'white'
-                    }}>
-                        <CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Box>
-                                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                                        {automationRules.filter(r => r.enabled).length}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                                        Active Rules
-                                    </Typography>
-                                </Box>
-                                <Autorenew sx={{ fontSize: 40, opacity: 0.8 }} />
-                            </Box>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                    <Card sx={{
-                        background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(248, 113, 113, 0.2) 100%)',
-                        backdropFilter: 'blur(20px)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '16px',
-                        color: 'white'
-                    }}>
-                        <CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Box>
-                                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                                        {[...automatedReminders, ...taskReminders].filter(item => item.status === 'overdue').length}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                                        Overdue Items
-                                    </Typography>
-                                </Box>
-                                <Warning sx={{ fontSize: 40, opacity: 0.8 }} />
-                            </Box>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
-
-            {/* Search and Filter */}
-            <Paper sx={{
-                p: 3,
-                mb: 3,
+            {/* Main Content */}
+            <Card sx={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '16px'
+                borderRadius: '20px',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
             }}>
-                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-                    <TextField
-                        placeholder="Search reminders, tasks, or clients..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        variant="outlined"
-                        size="small"
-                        sx={{ minWidth: 300, flex: 1 }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <FormControl size="small" sx={{ minWidth: 120 }}>
-                        <InputLabel>Status</InputLabel>
-                        <Select
-                            value={filterStatus}
-                            label="Status"
-                            onChange={(e) => setFilterStatus(e.target.value)}
-                            startAdornment={<FilterList />}
-                        >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="pending">Pending</MenuItem>
-                            <MenuItem value="in_progress">In Progress</MenuItem>
-                            <MenuItem value="completed">Completed</MenuItem>
-                            <MenuItem value="overdue">Overdue</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box>
-            </Paper>
-
-            {/* Tabs */}
-            <Paper sx={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '16px',
-                overflow: 'hidden'
-            }}>
-                <Tabs
-                    value={activeTab}
-                    onChange={handleTabChange}
-                    variant="fullWidth"
-                    sx={{
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-                        '& .MuiTab-root': {
-                            color: 'rgba(255, 255, 255, 0.7)',
-                            '&.Mui-selected': {
-                                color: '#60a5fa'
+                <CardContent>
+                    {/* Tabs */}
+                    <Tabs
+                        value={activeTab}
+                        onChange={handleTabChange}
+                        sx={{
+                            mb: 3,
+                            '& .MuiTab-root': {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                '&.Mui-selected': {
+                                    color: '#60a5fa'
+                                }
+                            },
+                            '& .MuiTabs-indicator': {
+                                backgroundColor: '#60a5fa'
                             }
-                        }
-                    }}
-                >
-                    <Tab
-                        icon={<NotificationsActive />}
-                        label="Automated Reminders"
-                        iconPosition="start"
-                    />
-                    <Tab
-                        icon={<Assignment />}
-                        label="Task Reminders"
-                        iconPosition="start"
-                    />
-                    <Tab
-                        icon={<Settings />}
-                        label="Automation Rules"
-                        iconPosition="start"
-                    />
-                </Tabs>
+                        }}
+                    >
+                        <Tab
+                            icon={<NotificationsActive />}
+                            label="Automated Reminders"
+                            iconPosition="start"
+                        />
+                        <Tab
+                            icon={<Assignment />}
+                            label="Task Reminders"
+                            iconPosition="start"
+                        />
+                        <Tab
+                            icon={<Settings />}
+                            label="Automation Rules"
+                            iconPosition="start"
+                        />
+                    </Tabs>
 
-                {/* Tab Content */}
-                <Box sx={{ p: 3 }}>
+                    {/* Action Bar */}
+                    <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+                        <TextField
+                            placeholder="Search reminders, tasks, or clients..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            sx={{
+                                minWidth: 250,
+                                '& .MuiOutlinedInput-root': {
+                                    color: 'white',
+                                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                    '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                    '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                }
+                            }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+
+                        <FormControl sx={{ minWidth: 120 }}>
+                            <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Status</InputLabel>
+                            <Select
+                                value={filterStatus}
+                                label="Status"
+                                onChange={(e) => setFilterStatus(e.target.value)}
+                                sx={{
+                                    color: 'white',
+                                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#60a5fa' }
+                                }}
+                            >
+                                <MenuItem value="all">All</MenuItem>
+                                <MenuItem value="pending">Pending</MenuItem>
+                                <MenuItem value="in_progress">In Progress</MenuItem>
+                                <MenuItem value="completed">Completed</MenuItem>
+                                <MenuItem value="overdue">Overdue</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <Box sx={{ flexGrow: 1 }} />
+
+                        {activeTab === 0 && (
+                            <Button
+                                variant="contained"
+                                startIcon={<Add />}
+                                onClick={() => setReminderDialogOpen(true)}
+                                sx={{
+                                    background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                                    '&:hover': {
+                                        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+                                    }
+                                }}
+                            >
+                                Create Reminder
+                            </Button>
+                        )}
+
+                        {activeTab === 1 && (
+                            <Button
+                                variant="contained"
+                                startIcon={<Add />}
+                                onClick={() => setTaskDialogOpen(true)}
+                                sx={{
+                                    background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)',
+                                    '&:hover': {
+                                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                                    }
+                                }}
+                            >
+                                Create Task
+                            </Button>
+                        )}
+
+                        {activeTab === 2 && (
+                            <Button
+                                variant="contained"
+                                startIcon={<Settings />}
+                                onClick={() => setAutomationDialogOpen(true)}
+                                sx={{
+                                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                                    '&:hover': {
+                                        background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)'
+                                    }
+                                }}
+                            >
+                                Automation Settings
+                            </Button>
+                        )}
+                    </Box>
+
+                    {/* Tab Content */}
                     {/* AUTOMATED REMINDERS TAB */}
                     {activeTab === 0 && (
                         <>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                                <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
-                                    Automated Client Reminders
-                                </Typography>
-                                <Button
-                                    variant="contained"
-                                    startIcon={<Add />}
-                                    onClick={() => setReminderDialogOpen(true)}
-                                    sx={{
-                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                        '&:hover': {
-                                            background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
-                                        }
-                                    }}
-                                >
-                                    Create Reminder
-                                </Button>
-                            </Box>
+                            <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold', mb: 3 }}>
+                                Automated Client Reminders
+                            </Typography>
 
                             <TableContainer>
                                 <Table>
@@ -724,24 +749,9 @@ const SchedulingAutomation = () => {
                     {/* TASK REMINDERS TAB */}
                     {activeTab === 1 && (
                         <>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                                <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
-                                    Task Reminders & Management
-                                </Typography>
-                                <Button
-                                    variant="contained"
-                                    startIcon={<Add />}
-                                    onClick={() => setTaskDialogOpen(true)}
-                                    sx={{
-                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                        '&:hover': {
-                                            background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
-                                        }
-                                    }}
-                                >
-                                    Create Task
-                                </Button>
-                            </Box>
+                            <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold', mb: 3 }}>
+                                Task Reminders & Management
+                            </Typography>
 
                             <TableContainer>
                                 <Table>
@@ -862,24 +872,9 @@ const SchedulingAutomation = () => {
                     {/* AUTOMATION RULES TAB */}
                     {activeTab === 2 && (
                         <>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                                <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
-                                    Automation Rules & Settings
-                                </Typography>
-                                <Button
-                                    variant="contained"
-                                    startIcon={<Settings />}
-                                    onClick={() => setAutomationDialogOpen(true)}
-                                    sx={{
-                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                        '&:hover': {
-                                            background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
-                                        }
-                                    }}
-                                >
-                                    Automation Settings
-                                </Button>
-                            </Box>
+                            <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold', mb: 3 }}>
+                                Automation Rules & Settings
+                            </Typography>
 
                             <TableContainer>
                                 <Table>
@@ -986,8 +981,8 @@ const SchedulingAutomation = () => {
                             </TableContainer>
                         </>
                     )}
-                </Box>
-            </Paper>
+                </CardContent>
+            </Card>
 
             {/* Action Menu */}
             <Menu
@@ -1015,111 +1010,217 @@ const SchedulingAutomation = () => {
                 onClose={() => setReminderDialogOpen(false)}
                 maxWidth="md"
                 fullWidth
+                PaperProps={{
+                    sx: {
+                        background: 'rgba(30, 41, 59, 0.95)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '20px',
+                        color: 'white'
+                    }
+                }}
             >
-                <DialogTitle>Create Automated Reminder</DialogTitle>
+                <DialogTitle>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
+                        Create Automated Reminder
+                    </Typography>
+                </DialogTitle>
                 <DialogContent>
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12} sm={6}>
-                            <Autocomplete
-                                options={clients}
-                                getOptionLabel={(option) => option.name}
-                                value={clients.find(c => c.id === newReminder.clientId) || null}
-                                onChange={(event, newValue) => {
-                                    setNewReminder({ ...newReminder, clientId: newValue ? newValue.id : '' });
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Select Client" fullWidth />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Reminder Type</InputLabel>
-                                <Select
-                                    value={newReminder.type}
-                                    label="Reminder Type"
-                                    onChange={(e) => setNewReminder({ ...newReminder, type: e.target.value })}
-                                >
-                                    <MenuItem value="withdrawal">Withdrawal</MenuItem>
-                                    <MenuItem value="deposit">Deposit</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
-                                label="Title"
-                                value={newReminder.title}
-                                onChange={(e) => setNewReminder({ ...newReminder, title: e.target.value })}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
-                                multiline
-                                rows={3}
-                                label="Description"
-                                value={newReminder.description}
-                                onChange={(e) => setNewReminder({ ...newReminder, description: e.target.value })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                fullWidth
-                                type="date"
-                                label="Due Date"
-                                value={newReminder.dueDate}
-                                onChange={(e) => setNewReminder({ ...newReminder, dueDate: e.target.value })}
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <FormControl fullWidth>
-                                <InputLabel>Priority</InputLabel>
-                                <Select
-                                    value={newReminder.priority}
-                                    label="Priority"
-                                    onChange={(e) => setNewReminder({ ...newReminder, priority: e.target.value })}
-                                >
-                                    <MenuItem value="low">Low</MenuItem>
-                                    <MenuItem value="medium">Medium</MenuItem>
-                                    <MenuItem value="high">High</MenuItem>
-                                    <MenuItem value="urgent">Urgent</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <FormControl fullWidth>
-                                <InputLabel>Frequency</InputLabel>
-                                <Select
-                                    value={newReminder.frequency}
-                                    label="Frequency"
-                                    onChange={(e) => setNewReminder({ ...newReminder, frequency: e.target.value })}
-                                >
-                                    <MenuItem value="once">Once</MenuItem>
-                                    <MenuItem value="weekly">Weekly</MenuItem>
-                                    <MenuItem value="monthly">Monthly</MenuItem>
-                                    <MenuItem value="quarterly">Quarterly</MenuItem>
-                                    <MenuItem value="yearly">Yearly</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={newReminder.autoSend}
-                                        onChange={(e) => setNewReminder({ ...newReminder, autoSend: e.target.checked })}
+                    <Box sx={{ pt: 2 }}>
+                        <div className="container-fluid">
+                            <div className="row g-3">
+                                <div className="col-md-6">
+                                    <Autocomplete
+                                        options={clients}
+                                        getOptionLabel={(option) => option.name}
+                                        value={clients.find(c => c.id === newReminder.clientId) || null}
+                                        onChange={(event, newValue) => {
+                                            setNewReminder({ ...newReminder, clientId: newValue ? newValue.id : '' });
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Select Client"
+                                                fullWidth
+                                                required
+                                                sx={{
+                                                    '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                                    '& .MuiOutlinedInput-root': {
+                                                        color: 'white',
+                                                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                        '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                        '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                                    }
+                                                }}
+                                            />
+                                        )}
                                     />
-                                }
-                                label="Auto-send reminders"
-                            />
-                        </Grid>
-                    </Grid>
+                                </div>
+                                <div className="col-md-6">
+                                    <FormControl fullWidth required>
+                                        <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Reminder Type</InputLabel>
+                                        <Select
+                                            value={newReminder.type}
+                                            label="Reminder Type"
+                                            onChange={(e) => setNewReminder({ ...newReminder, type: e.target.value })}
+                                            sx={{
+                                                color: 'white',
+                                                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#60a5fa' }
+                                            }}
+                                        >
+                                            <MenuItem value="withdrawal">Withdrawal</MenuItem>
+                                            <MenuItem value="deposit">Deposit</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="col-12">
+                                    <TextField
+                                        fullWidth
+                                        label="Title"
+                                        value={newReminder.title}
+                                        onChange={(e) => setNewReminder({ ...newReminder, title: e.target.value })}
+                                        required
+                                        sx={{
+                                            '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                            '& .MuiOutlinedInput-root': {
+                                                color: 'white',
+                                                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-12">
+                                    <TextField
+                                        fullWidth
+                                        multiline
+                                        rows={3}
+                                        label="Description"
+                                        value={newReminder.description}
+                                        onChange={(e) => setNewReminder({ ...newReminder, description: e.target.value })}
+                                        sx={{
+                                            '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                            '& .MuiOutlinedInput-root': {
+                                                color: 'white',
+                                                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-md-4">
+                                    <TextField
+                                        fullWidth
+                                        type="date"
+                                        label="Due Date"
+                                        value={newReminder.dueDate}
+                                        onChange={(e) => setNewReminder({ ...newReminder, dueDate: e.target.value })}
+                                        InputLabelProps={{ shrink: true }}
+                                        required
+                                        sx={{
+                                            '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                            '& .MuiOutlinedInput-root': {
+                                                color: 'white',
+                                                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-md-4">
+                                    <FormControl fullWidth>
+                                        <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Priority</InputLabel>
+                                        <Select
+                                            value={newReminder.priority}
+                                            label="Priority"
+                                            onChange={(e) => setNewReminder({ ...newReminder, priority: e.target.value })}
+                                            sx={{
+                                                color: 'white',
+                                                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#60a5fa' }
+                                            }}
+                                        >
+                                            <MenuItem value="low">Low</MenuItem>
+                                            <MenuItem value="medium">Medium</MenuItem>
+                                            <MenuItem value="high">High</MenuItem>
+                                            <MenuItem value="urgent">Urgent</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="col-md-4">
+                                    <FormControl fullWidth>
+                                        <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Frequency</InputLabel>
+                                        <Select
+                                            value={newReminder.frequency}
+                                            label="Frequency"
+                                            onChange={(e) => setNewReminder({ ...newReminder, frequency: e.target.value })}
+                                            sx={{
+                                                color: 'white',
+                                                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#60a5fa' }
+                                            }}
+                                        >
+                                            <MenuItem value="once">Once</MenuItem>
+                                            <MenuItem value="weekly">Weekly</MenuItem>
+                                            <MenuItem value="monthly">Monthly</MenuItem>
+                                            <MenuItem value="quarterly">Quarterly</MenuItem>
+                                            <MenuItem value="yearly">Yearly</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="col-12">
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={newReminder.autoSend}
+                                                onChange={(e) => setNewReminder({ ...newReminder, autoSend: e.target.checked })}
+                                                sx={{
+                                                    '& .MuiSwitch-switchBase.Mui-checked': {
+                                                        color: '#60a5fa',
+                                                        '&:hover': {
+                                                            backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                        },
+                                                    },
+                                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                        backgroundColor: '#60a5fa',
+                                                    },
+                                                }}
+                                            />
+                                        }
+                                        label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Auto-send reminders</Typography>}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </Box>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setReminderDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={handleCreateReminder} variant="contained">Create Reminder</Button>
+                <DialogActions sx={{ p: 3 }}>
+                    <Button
+                        onClick={() => setReminderDialogOpen(false)}
+                        sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        startIcon={<Add />}
+                        onClick={handleCreateReminder}
+                        sx={{
+                            background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                            '&:hover': {
+                                background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+                            }
+                        }}
+                    >
+                        Create Reminder
+                    </Button>
                 </DialogActions>
             </Dialog>
 
@@ -1129,125 +1230,244 @@ const SchedulingAutomation = () => {
                 onClose={() => setTaskDialogOpen(false)}
                 maxWidth="md"
                 fullWidth
+                PaperProps={{
+                    sx: {
+                        background: 'rgba(30, 41, 59, 0.95)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '20px',
+                        color: 'white'
+                    }
+                }}
             >
-                <DialogTitle>Create Task Reminder</DialogTitle>
+                <DialogTitle>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
+                        Create Task Reminder
+                    </Typography>
+                </DialogTitle>
                 <DialogContent>
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12} sm={6}>
-                            <Autocomplete
-                                options={clients}
-                                getOptionLabel={(option) => option.name}
-                                value={clients.find(c => c.id === newTask.clientId) || null}
-                                onChange={(event, newValue) => {
-                                    setNewTask({ ...newTask, clientId: newValue ? newValue.id : '' });
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Select Client" fullWidth />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Task Type</InputLabel>
-                                <Select
-                                    value={newTask.type}
-                                    label="Task Type"
-                                    onChange={(e) => setNewTask({ ...newTask, type: e.target.value })}
-                                >
-                                    <MenuItem value="contract_renewal">Contract Renewal</MenuItem>
-                                    <MenuItem value="client_checkin">Client Check-in</MenuItem>
-                                    <MenuItem value="documentation">Documentation</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
-                                label="Task Title"
-                                value={newTask.title}
-                                onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
-                                multiline
-                                rows={3}
-                                label="Description"
-                                value={newTask.description}
-                                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                fullWidth
-                                type="date"
-                                label="Due Date"
-                                value={newTask.dueDate}
-                                onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <Autocomplete
-                                options={staff}
-                                getOptionLabel={(option) => option.name}
-                                value={staff.find(s => s.name === newTask.assignedTo) || null}
-                                onChange={(event, newValue) => {
-                                    setNewTask({ ...newTask, assignedTo: newValue ? newValue.name : '' });
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Assign To" fullWidth />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <FormControl fullWidth>
-                                <InputLabel>Priority</InputLabel>
-                                <Select
-                                    value={newTask.priority}
-                                    label="Priority"
-                                    onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-                                >
-                                    <MenuItem value="low">Low</MenuItem>
-                                    <MenuItem value="medium">Medium</MenuItem>
-                                    <MenuItem value="high">High</MenuItem>
-                                    <MenuItem value="urgent">Urgent</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={newTask.autoReminder}
-                                        onChange={(e) => setNewTask({ ...newTask, autoReminder: e.target.checked })}
+                    <Box sx={{ pt: 2 }}>
+                        <div className="container-fluid">
+                            <div className="row g-3">
+                                <div className="col-md-6">
+                                    <Autocomplete
+                                        options={clients}
+                                        getOptionLabel={(option) => option.name}
+                                        value={clients.find(c => c.id === newTask.clientId) || null}
+                                        onChange={(event, newValue) => {
+                                            setNewTask({ ...newTask, clientId: newValue ? newValue.id : '' });
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Select Client"
+                                                fullWidth
+                                                required
+                                                sx={{
+                                                    '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                                    '& .MuiOutlinedInput-root': {
+                                                        color: 'white',
+                                                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                        '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                        '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                                    }
+                                                }}
+                                            />
+                                        )}
                                     />
-                                }
-                                label="Auto-reminder enabled"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Reminder Days Before</InputLabel>
-                                <Select
-                                    value={newTask.reminderBefore}
-                                    label="Reminder Days Before"
-                                    onChange={(e) => setNewTask({ ...newTask, reminderBefore: e.target.value })}
-                                >
-                                    <MenuItem value="1">1 Day</MenuItem>
-                                    <MenuItem value="3">3 Days</MenuItem>
-                                    <MenuItem value="7">7 Days</MenuItem>
-                                    <MenuItem value="14">14 Days</MenuItem>
-                                    <MenuItem value="30">30 Days</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
+                                </div>
+                                <div className="col-md-6">
+                                    <FormControl fullWidth required>
+                                        <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Task Type</InputLabel>
+                                        <Select
+                                            value={newTask.type}
+                                            label="Task Type"
+                                            onChange={(e) => setNewTask({ ...newTask, type: e.target.value })}
+                                            sx={{
+                                                color: 'white',
+                                                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#60a5fa' }
+                                            }}
+                                        >
+                                            <MenuItem value="contract_renewal">Contract Renewal</MenuItem>
+                                            <MenuItem value="client_checkin">Client Check-in</MenuItem>
+                                            <MenuItem value="documentation">Documentation</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="col-12">
+                                    <TextField
+                                        fullWidth
+                                        label="Task Title"
+                                        value={newTask.title}
+                                        onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                                        required
+                                        sx={{
+                                            '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                            '& .MuiOutlinedInput-root': {
+                                                color: 'white',
+                                                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-12">
+                                    <TextField
+                                        fullWidth
+                                        multiline
+                                        rows={3}
+                                        label="Description"
+                                        value={newTask.description}
+                                        onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                                        sx={{
+                                            '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                            '& .MuiOutlinedInput-root': {
+                                                color: 'white',
+                                                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-md-4">
+                                    <TextField
+                                        fullWidth
+                                        type="date"
+                                        label="Due Date"
+                                        value={newTask.dueDate}
+                                        onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                                        InputLabelProps={{ shrink: true }}
+                                        required
+                                        sx={{
+                                            '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                            '& .MuiOutlinedInput-root': {
+                                                color: 'white',
+                                                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-md-4">
+                                    <Autocomplete
+                                        options={staff}
+                                        getOptionLabel={(option) => option.name}
+                                        value={staff.find(s => s.name === newTask.assignedTo) || null}
+                                        onChange={(event, newValue) => {
+                                            setNewTask({ ...newTask, assignedTo: newValue ? newValue.name : '' });
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Assign To"
+                                                fullWidth
+                                                sx={{
+                                                    '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
+                                                    '& .MuiOutlinedInput-root': {
+                                                        color: 'white',
+                                                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                        '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                        '&.Mui-focused fieldset': { borderColor: '#60a5fa' }
+                                                    }
+                                                }}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                                <div className="col-md-4">
+                                    <FormControl fullWidth>
+                                        <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Priority</InputLabel>
+                                        <Select
+                                            value={newTask.priority}
+                                            label="Priority"
+                                            onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
+                                            sx={{
+                                                color: 'white',
+                                                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#60a5fa' }
+                                            }}
+                                        >
+                                            <MenuItem value="low">Low</MenuItem>
+                                            <MenuItem value="medium">Medium</MenuItem>
+                                            <MenuItem value="high">High</MenuItem>
+                                            <MenuItem value="urgent">Urgent</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="col-md-6">
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={newTask.autoReminder}
+                                                onChange={(e) => setNewTask({ ...newTask, autoReminder: e.target.checked })}
+                                                sx={{
+                                                    '& .MuiSwitch-switchBase.Mui-checked': {
+                                                        color: '#60a5fa',
+                                                        '&:hover': {
+                                                            backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                        },
+                                                    },
+                                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                        backgroundColor: '#60a5fa',
+                                                    },
+                                                }}
+                                            />
+                                        }
+                                        label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Auto-reminder enabled</Typography>}
+                                    />
+                                </div>
+                                <div className="col-md-6">
+                                    <FormControl fullWidth>
+                                        <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Reminder Days Before</InputLabel>
+                                        <Select
+                                            value={newTask.reminderBefore}
+                                            label="Reminder Days Before"
+                                            onChange={(e) => setNewTask({ ...newTask, reminderBefore: e.target.value })}
+                                            sx={{
+                                                color: 'white',
+                                                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#60a5fa' }
+                                            }}
+                                        >
+                                            <MenuItem value="1">1 Day</MenuItem>
+                                            <MenuItem value="3">3 Days</MenuItem>
+                                            <MenuItem value="7">7 Days</MenuItem>
+                                            <MenuItem value="14">14 Days</MenuItem>
+                                            <MenuItem value="30">30 Days</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                            </div>
+                        </div>
+                    </Box>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setTaskDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={handleCreateTask} variant="contained">Create Task</Button>
+                <DialogActions sx={{ p: 3 }}>
+                    <Button
+                        onClick={() => setTaskDialogOpen(false)}
+                        sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        startIcon={<Assignment />}
+                        onClick={handleCreateTask}
+                        sx={{
+                            background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)',
+                            '&:hover': {
+                                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                            }
+                        }}
+                    >
+                        Create Task
+                    </Button>
                 </DialogActions>
             </Dialog>
 
@@ -1257,146 +1477,294 @@ const SchedulingAutomation = () => {
                 onClose={() => setAutomationDialogOpen(false)}
                 maxWidth="md"
                 fullWidth
+                PaperProps={{
+                    sx: {
+                        background: 'rgba(30, 41, 59, 0.95)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '20px',
+                        color: 'white'
+                    }
+                }}
             >
-                <DialogTitle>Automation Settings</DialogTitle>
+                <DialogTitle>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>
+                        Automation Settings
+                    </Typography>
+                </DialogTitle>
                 <DialogContent>
-                    <Grid container spacing={3} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" gutterBottom>
-                                Automated Reminders
-                            </Typography>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={automationSettings.withdrawalReminders}
-                                        onChange={(e) => setAutomationSettings({
-                                            ...automationSettings,
-                                            withdrawalReminders: e.target.checked
-                                        })}
-                                    />
-                                }
-                                label="Withdrawal Reminders"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={automationSettings.depositReminders}
-                                        onChange={(e) => setAutomationSettings({
-                                            ...automationSettings,
-                                            depositReminders: e.target.checked
-                                        })}
-                                    />
-                                }
-                                label="Deposit Reminders"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={automationSettings.contractRenewals}
-                                        onChange={(e) => setAutomationSettings({
-                                            ...automationSettings,
-                                            contractRenewals: e.target.checked
-                                        })}
-                                    />
-                                }
-                                label="Contract Renewal Tasks"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={automationSettings.documentReminders}
-                                        onChange={(e) => setAutomationSettings({
-                                            ...automationSettings,
-                                            documentReminders: e.target.checked
-                                        })}
-                                    />
-                                }
-                                label="Document Reminders"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={automationSettings.clientCheckIns}
-                                        onChange={(e) => setAutomationSettings({
-                                            ...automationSettings,
-                                            clientCheckIns: e.target.checked
-                                        })}
-                                    />
-                                }
-                                label="Client Check-in Tasks"
-                            />
-                        </Grid>
+                    <Box sx={{ pt: 2 }}>
+                        <div className="container-fluid">
+                            <div className="row g-3">
+                                <div className="col-12">
+                                    <Typography variant="h6" gutterBottom sx={{ color: 'white', fontWeight: 'bold' }}>
+                                        Automated Reminders
+                                    </Typography>
+                                    <div className="row g-2">
+                                        <div className="col-md-6">
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={automationSettings.withdrawalReminders}
+                                                        onChange={(e) => setAutomationSettings({
+                                                            ...automationSettings,
+                                                            withdrawalReminders: e.target.checked
+                                                        })}
+                                                        sx={{
+                                                            '& .MuiSwitch-switchBase.Mui-checked': {
+                                                                color: '#60a5fa',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                                },
+                                                            },
+                                                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                                backgroundColor: '#60a5fa',
+                                                            },
+                                                        }}
+                                                    />
+                                                }
+                                                label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Withdrawal Reminders</Typography>}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={automationSettings.depositReminders}
+                                                        onChange={(e) => setAutomationSettings({
+                                                            ...automationSettings,
+                                                            depositReminders: e.target.checked
+                                                        })}
+                                                        sx={{
+                                                            '& .MuiSwitch-switchBase.Mui-checked': {
+                                                                color: '#60a5fa',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                                },
+                                                            },
+                                                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                                backgroundColor: '#60a5fa',
+                                                            },
+                                                        }}
+                                                    />
+                                                }
+                                                label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Deposit Reminders</Typography>}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={automationSettings.contractRenewals}
+                                                        onChange={(e) => setAutomationSettings({
+                                                            ...automationSettings,
+                                                            contractRenewals: e.target.checked
+                                                        })}
+                                                        sx={{
+                                                            '& .MuiSwitch-switchBase.Mui-checked': {
+                                                                color: '#60a5fa',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                                },
+                                                            },
+                                                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                                backgroundColor: '#60a5fa',
+                                                            },
+                                                        }}
+                                                    />
+                                                }
+                                                label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Contract Renewal Tasks</Typography>}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={automationSettings.documentReminders}
+                                                        onChange={(e) => setAutomationSettings({
+                                                            ...automationSettings,
+                                                            documentReminders: e.target.checked
+                                                        })}
+                                                        sx={{
+                                                            '& .MuiSwitch-switchBase.Mui-checked': {
+                                                                color: '#60a5fa',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                                },
+                                                            },
+                                                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                                backgroundColor: '#60a5fa',
+                                                            },
+                                                        }}
+                                                    />
+                                                }
+                                                label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Document Reminders</Typography>}
+                                            />
+                                        </div>
+                                        <div className="col-12">
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={automationSettings.clientCheckIns}
+                                                        onChange={(e) => setAutomationSettings({
+                                                            ...automationSettings,
+                                                            clientCheckIns: e.target.checked
+                                                        })}
+                                                        sx={{
+                                                            '& .MuiSwitch-switchBase.Mui-checked': {
+                                                                color: '#60a5fa',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                                },
+                                                            },
+                                                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                                backgroundColor: '#60a5fa',
+                                                            },
+                                                        }}
+                                                    />
+                                                }
+                                                label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Client Check-in Tasks</Typography>}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <Grid item xs={12}>
-                            <Divider sx={{ my: 2 }} />
-                            <Typography variant="h6" gutterBottom>
-                                Notification Settings
-                            </Typography>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={automationSettings.emailNotifications}
-                                        onChange={(e) => setAutomationSettings({
-                                            ...automationSettings,
-                                            emailNotifications: e.target.checked
-                                        })}
-                                    />
-                                }
-                                label="Email Notifications"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={automationSettings.smsNotifications}
-                                        onChange={(e) => setAutomationSettings({
-                                            ...automationSettings,
-                                            smsNotifications: e.target.checked
-                                        })}
-                                    />
-                                }
-                                label="SMS Notifications"
-                            />
-                        </Grid>
+                                <div className="col-12">
+                                    <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.2)' }} />
+                                    <Typography variant="h6" gutterBottom sx={{ color: 'white', fontWeight: 'bold' }}>
+                                        Notification Settings
+                                    </Typography>
+                                    <div className="row g-2">
+                                        <div className="col-md-6">
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={automationSettings.emailNotifications}
+                                                        onChange={(e) => setAutomationSettings({
+                                                            ...automationSettings,
+                                                            emailNotifications: e.target.checked
+                                                        })}
+                                                        sx={{
+                                                            '& .MuiSwitch-switchBase.Mui-checked': {
+                                                                color: '#60a5fa',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                                },
+                                                            },
+                                                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                                backgroundColor: '#60a5fa',
+                                                            },
+                                                        }}
+                                                    />
+                                                }
+                                                label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Email Notifications</Typography>}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={automationSettings.smsNotifications}
+                                                        onChange={(e) => setAutomationSettings({
+                                                            ...automationSettings,
+                                                            smsNotifications: e.target.checked
+                                                        })}
+                                                        sx={{
+                                                            '& .MuiSwitch-switchBase.Mui-checked': {
+                                                                color: '#60a5fa',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                                },
+                                                            },
+                                                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                                backgroundColor: '#60a5fa',
+                                                            },
+                                                        }}
+                                                    />
+                                                }
+                                                label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>SMS Notifications</Typography>}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Default Reminder Days Before</InputLabel>
-                                <Select
-                                    value={automationSettings.reminderDaysBefore}
-                                    label="Default Reminder Days Before"
-                                    onChange={(e) => setAutomationSettings({
-                                        ...automationSettings,
-                                        reminderDaysBefore: e.target.value
-                                    })}
-                                >
-                                    <MenuItem value="1">1 Day</MenuItem>
-                                    <MenuItem value="3">3 Days</MenuItem>
-                                    <MenuItem value="7">7 Days</MenuItem>
-                                    <MenuItem value="14">14 Days</MenuItem>
-                                    <MenuItem value="30">30 Days</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                                <div className="col-md-6">
+                                    <FormControl fullWidth>
+                                        <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Default Reminder Days Before</InputLabel>
+                                        <Select
+                                            value={automationSettings.reminderDaysBefore}
+                                            label="Default Reminder Days Before"
+                                            onChange={(e) => setAutomationSettings({
+                                                ...automationSettings,
+                                                reminderDaysBefore: e.target.value
+                                            })}
+                                            sx={{
+                                                color: 'white',
+                                                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#60a5fa' }
+                                            }}
+                                        >
+                                            <MenuItem value="1">1 Day</MenuItem>
+                                            <MenuItem value="3">3 Days</MenuItem>
+                                            <MenuItem value="7">7 Days</MenuItem>
+                                            <MenuItem value="14">14 Days</MenuItem>
+                                            <MenuItem value="30">30 Days</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
 
-                        <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={automationSettings.autoAssignTasks}
-                                        onChange={(e) => setAutomationSettings({
-                                            ...automationSettings,
-                                            autoAssignTasks: e.target.checked
-                                        })}
-                                    />
-                                }
-                                label="Auto-assign Tasks"
-                            />
-                        </Grid>
-                    </Grid>
+                                <div className="col-md-6">
+                                    <div style={{ paddingTop: '16px' }}>
+                                        <FormControlLabel
+                                            control={
+                                                <Switch
+                                                    checked={automationSettings.autoAssignTasks}
+                                                    onChange={(e) => setAutomationSettings({
+                                                        ...automationSettings,
+                                                        autoAssignTasks: e.target.checked
+                                                    })}
+                                                    sx={{
+                                                        '& .MuiSwitch-switchBase.Mui-checked': {
+                                                            color: '#60a5fa',
+                                                            '&:hover': {
+                                                                backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                                                            },
+                                                        },
+                                                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                            backgroundColor: '#60a5fa',
+                                                        },
+                                                    }}
+                                                />
+                                            }
+                                            label={<Typography sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>Auto-assign Tasks</Typography>}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Box>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setAutomationDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={handleSaveAutomation} variant="contained">Save Settings</Button>
+                <DialogActions sx={{ p: 3 }}>
+                    <Button
+                        onClick={() => setAutomationDialogOpen(false)}
+                        sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        startIcon={<Settings />}
+                        onClick={handleSaveAutomation}
+                        sx={{
+                            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                            '&:hover': {
+                                background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)'
+                            }
+                        }}
+                    >
+                        Save Settings
+                    </Button>
                 </DialogActions>
             </Dialog>
         </>

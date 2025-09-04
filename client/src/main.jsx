@@ -16,6 +16,12 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import CommunicationSystem from './pages/CommunicationSystem';
 import SchedulingAutomation from './pages/SchedulingAutomation';
+import Operations from './pages/Operations';
+import FinancialReports from './pages/FinancialReports';
+import Monitoring from './pages/Monitoring';
+import ComplianceSecurity from './pages/ComplianceSecurity';
+import ReferralManagement from './pages/ReferralManagement';
+import ReportingDashboard from './pages/ReportingDashboard';
 import { ToastProvider } from './contexts/ToastContext';
 
 createRoot(document.getElementById('root')).render(
@@ -35,6 +41,12 @@ createRoot(document.getElementById('root')).render(
               <Route path="/client-details/:clientId" element={<ClientDetails />} />
               <Route path="/communication" element={<CommunicationSystem />} />
               <Route path="/scheduling" element={<SchedulingAutomation />} />
+              <Route path="/operations" element={<Operations />} />
+              <Route path="/financial-reports" element={<FinancialReports />} />
+              <Route path="/monitoring" element={<Monitoring />} />
+              <Route path="/compliance-security" element={<ComplianceSecurity />} />
+              <Route path="/referral-management" element={<ReferralManagement />} />
+              <Route path="/reporting-dashboard" element={<ReportingDashboard />} />
               <Route path="/contracts" element={<ContractAndDocuments />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
