@@ -33,7 +33,13 @@ import {
     MenuBook,
     Close,
     Message,
-    Schedule
+    Schedule,
+    AccountBalance,
+    Assessment,
+    Security,
+    Shield,
+    Share,
+    Analytics
 } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 
@@ -54,6 +60,12 @@ const Sidebar = ({ open, onClose }) => {
         if (path === '/contracts') return 'Contracts & Documents';
         if (path === '/communication') return 'Communication System';
         if (path === '/scheduling') return 'Scheduling & Automation';
+        if (path === '/operations') return 'Operations';
+        if (path === '/financial-reports') return 'Financial Reports';
+        if (path === '/monitoring') return 'Monitoring';
+        if (path === '/compliance-security') return 'Compliance & Security';
+        if (path === '/referral-management') return 'Referral Management';
+        if (path === '/reporting-dashboard') return 'Reporting Dashboard';
         return 'Dashboard';
     };
 
@@ -68,6 +80,12 @@ const Sidebar = ({ open, onClose }) => {
             if (path === '/contracts') return 'Contracts & Documents';
             if (path === '/communication') return 'Communication System';
             if (path === '/scheduling') return 'Scheduling & Automation';
+            if (path === '/operations') return 'Operations';
+            if (path === '/financial-reports') return 'Financial Reports';
+            if (path === '/monitoring') return 'Monitoring';
+            if (path === '/compliance-security') return 'Compliance & Security';
+            if (path === '/referral-management') return 'Referral Management';
+            if (path === '/reporting-dashboard') return 'Reporting Dashboard';
             return 'Dashboard';
         };
         setActiveItem(getActiveFromPath());
@@ -126,6 +144,36 @@ const Sidebar = ({ open, onClose }) => {
             title: 'Scheduling & Automation',
             icon: <Schedule />,
             path: '/scheduling'
+        },
+        {
+            title: 'Operations',
+            icon: <AccountBalance />,
+            path: '/operations'
+        },
+        {
+            title: 'Financial Reports',
+            icon: <Assessment />,
+            path: '/financial-reports'
+        },
+        {
+            title: 'Monitoring',
+            icon: <Security />,
+            path: '/monitoring'
+        },
+        {
+            title: 'Compliance & Security',
+            icon: <Shield />,
+            path: '/compliance-security'
+        },
+        {
+            title: 'Referral Management',
+            icon: <Share />,
+            path: '/referral-management'
+        },
+        {
+            title: 'Reporting Dashboard',
+            icon: <Analytics />,
+            path: '/reporting-dashboard'
         }
     ];
 
