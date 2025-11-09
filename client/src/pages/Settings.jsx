@@ -27,7 +27,6 @@ import {
     LockReset,
     Close
 } from '@mui/icons-material';
-import { adminAPI } from '../services/api';
 
 const Settings = () => {
     const [loading, setLoading] = useState(false);
@@ -80,48 +79,15 @@ const Settings = () => {
     }, [profileSettings]);
 
     const fetchProfileData = async () => {
-        try {
-            setLoadingProfile(true);
+        // TODO: Add API call here
+        setLoadingProfile(true);
 
-            // Attempt to get profile from API
-            const response = await adminAPI.getProfile();
-            console.log('API Response:', response);
+        // Use mock data
+        console.log('Using mock data');
+        setProfileSettings(mockProfileData);
 
-            // Check if response has data property (common API pattern)
-            const userData = response.data || response;
-
-            if (userData && userData.firstName) {
-                // API returned valid data
-                setProfileSettings({
-                    firstName: userData.firstName || '',
-                    lastName: userData.lastName || '',
-                    email: userData.email || localStorage.getItem('userEmail') || '',
-                    role: userData.role || localStorage.getItem('userRole') || 'admin',
-                    permissions: userData.permissions || []
-                });
-            } else {
-                // API didn't return expected fields, use mock data
-                console.log('Using mock data due to incomplete API response');
-                setProfileSettings(mockProfileData);
-            }
-
-            console.log('Profile settings after update:', profileSettings);
-            setLoadingProfile(false);
-        } catch (error) {
-            console.error('Failed to fetch profile:', error);
-
-            // API failed, use mock data
-            console.log('Using mock data due to API error');
-            setProfileSettings(mockProfileData);
-
-            setNotification({
-                open: true,
-                message: 'Could not load profile data from server, using default values',
-                type: 'warning'
-            });
-
-            setLoadingProfile(false);
-        }
+        console.log('Profile settings after update:', profileSettings);
+        setLoadingProfile(false);
     };
 
     const handleProfileChange = (field) => (event) => {
@@ -150,29 +116,15 @@ const Settings = () => {
     };
 
     const handleSaveProfile = async () => {
-        try {
-            setLoading(true);
-            const response = await adminAPI.updateProfile({
-                firstName: profileSettings.firstName,
-                lastName: profileSettings.lastName,
-                email: profileSettings.email
-            });
+        // TODO: Add API call here
+        setLoading(true);
 
-            setNotification({
-                open: true,
-                message: 'Profile updated successfully',
-                type: 'success'
-            });
-            setLoading(false);
-        } catch (error) {
-            console.error('Failed to update profile:', error);
-            setNotification({
-                open: true,
-                message: error.message || 'Failed to update profile',
-                type: 'error'
-            });
-            setLoading(false);
-        }
+        setNotification({
+            open: true,
+            message: 'Profile updated successfully',
+            type: 'success'
+        });
+        setLoading(false);
     };
 
     const handleChangePassword = async () => {
@@ -195,34 +147,21 @@ const Settings = () => {
             return;
         }
 
-        try {
-            setLoading(true);
-            const response = await adminAPI.changePassword({
-                currentPassword: passwordData.currentPassword,
-                newPassword: passwordData.newPassword
-            });
+        // TODO: Add API call here
+        setLoading(true);
 
-            setPasswordData({
-                currentPassword: '',
-                newPassword: '',
-                confirmPassword: ''
-            });
+        setPasswordData({
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: ''
+        });
 
-            setNotification({
-                open: true,
-                message: 'Password changed successfully',
-                type: 'success'
-            });
-            setLoading(false);
-        } catch (error) {
-            console.error('Failed to change password:', error);
-            setNotification({
-                open: true,
-                message: error.message || 'Failed to change password',
-                type: 'error'
-            });
-            setLoading(false);
-        }
+        setNotification({
+            open: true,
+            message: 'Password changed successfully',
+            type: 'success'
+        });
+        setLoading(false);
     };
 
     const handleSavePreferences = () => {
@@ -350,8 +289,8 @@ const Settings = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Role"
-                                                value={profileSettings.role === 'super_admin' ? 'Super Admin' : 
-                                                      profileSettings.role === 'admin' ? 'Administrator' : 'Manager'}
+                                                value={profileSettings.role === 'super_admin' ? 'Super Admin' :
+                                                    profileSettings.role === 'admin' ? 'Administrator' : 'Manager'}
                                                 variant="outlined"
                                                 margin="normal"
                                                 InputProps={{
@@ -387,8 +326,8 @@ const Settings = () => {
                                             Account Type
                                         </Typography>
                                         <Typography variant="body1" fontWeight="bold">
-                                            {profileSettings.role === 'super_admin' ? 'Super Admin' : 
-                                             profileSettings.role === 'admin' ? 'Administrator' : 'Manager'}
+                                            {profileSettings.role === 'super_admin' ? 'Super Admin' :
+                                                profileSettings.role === 'admin' ? 'Administrator' : 'Manager'}
                                         </Typography>
                                     </Box>
                                     <Box sx={{ mb: 2 }}>

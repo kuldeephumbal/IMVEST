@@ -18,28 +18,11 @@ import {
 } from '@mui/material';
 import {
     Dashboard,
-    People,
-    Settings,
     ExpandLess,
     ExpandMore,
-    GridView,
-    SmartButton,
     Description,
-    BarChart,
-    Star,
-    Notifications,
-    Widgets,
-    Pages,
-    MenuBook,
     Close,
     Message,
-    Schedule,
-    AccountBalance,
-    Assessment,
-    Security,
-    Shield,
-    Share,
-    Analytics
 } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 
@@ -56,16 +39,8 @@ const Sidebar = ({ open, onClose }) => {
     const getActiveItemFromPath = () => {
         const path = location.pathname;
         if (path === '/' || path === '/dashboard') return 'Dashboard';
-        if (path === '/client-management') return 'Client Management';
         if (path === '/contracts') return 'Contracts & Documents';
         if (path === '/communication') return 'Communication System';
-        if (path === '/scheduling') return 'Scheduling & Automation';
-        if (path === '/operations') return 'Operations';
-        if (path === '/financial-reports') return 'Financial Reports';
-        if (path === '/monitoring') return 'Monitoring';
-        if (path === '/compliance-security') return 'Compliance & Security';
-        if (path === '/referral-management') return 'Referral Management';
-        if (path === '/reporting-dashboard') return 'Reporting Dashboard';
         return 'Dashboard';
     };
 
@@ -76,16 +51,8 @@ const Sidebar = ({ open, onClose }) => {
         const getActiveFromPath = () => {
             const path = location.pathname;
             if (path === '/' || path === '/dashboard') return 'Dashboard';
-            if (path === '/client-management') return 'Client Management';
             if (path === '/contracts') return 'Contracts & Documents';
             if (path === '/communication') return 'Communication System';
-            if (path === '/scheduling') return 'Scheduling & Automation';
-            if (path === '/operations') return 'Operations';
-            if (path === '/financial-reports') return 'Financial Reports';
-            if (path === '/monitoring') return 'Monitoring';
-            if (path === '/compliance-security') return 'Compliance & Security';
-            if (path === '/referral-management') return 'Referral Management';
-            if (path === '/reporting-dashboard') return 'Reporting Dashboard';
             return 'Dashboard';
         };
         setActiveItem(getActiveFromPath());
@@ -126,11 +93,6 @@ const Sidebar = ({ open, onClose }) => {
             path: '/dashboard'
         },
         {
-            title: 'Client Management',
-            icon: <People />,
-            path: '/client-management'
-        },
-        {
             title: 'Contracts & Documents',
             icon: <Description />,
             path: '/contracts'
@@ -139,41 +101,6 @@ const Sidebar = ({ open, onClose }) => {
             title: 'Communication System',
             icon: <Message />,
             path: '/communication'
-        },
-        {
-            title: 'Scheduling & Automation',
-            icon: <Schedule />,
-            path: '/scheduling'
-        },
-        {
-            title: 'Operations',
-            icon: <AccountBalance />,
-            path: '/operations'
-        },
-        {
-            title: 'Financial Reports',
-            icon: <Assessment />,
-            path: '/financial-reports'
-        },
-        {
-            title: 'Monitoring',
-            icon: <Security />,
-            path: '/monitoring'
-        },
-        {
-            title: 'Compliance & Security',
-            icon: <Shield />,
-            path: '/compliance-security'
-        },
-        {
-            title: 'Referral Management',
-            icon: <Share />,
-            path: '/referral-management'
-        },
-        {
-            title: 'Reporting Dashboard',
-            icon: <Analytics />,
-            path: '/reporting-dashboard'
         }
     ];
 

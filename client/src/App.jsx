@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
     Box,
     ThemeProvider,
@@ -14,18 +14,17 @@ const App = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [isDarkMode, setIsDarkMode] = useState(true);
     const location = useLocation();
-    const navigate = useNavigate();
 
-    // Check if user is logged in
-    useEffect(() => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const adminToken = localStorage.getItem('adminToken');
-        const adminData = localStorage.getItem('adminData');
-        
-        if (!isLoggedIn || !adminToken || !adminData) {
-            navigate('/login');
-        }
-    }, [navigate]);
+    // TODO: Add authentication check here when needed
+    // useEffect(() => {
+    //     const isLoggedIn = localStorage.getItem('isLoggedIn');
+    //     const adminToken = localStorage.getItem('adminToken');
+    //     const adminData = localStorage.getItem('adminData');
+    //     
+    //     if (!isLoggedIn || !adminToken || !adminData) {
+    //         navigate('/login');
+    //     }
+    // }, [navigate]);
 
     const theme = createTheme({
         palette: {

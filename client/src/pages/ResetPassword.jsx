@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
     Box,
     Card,
@@ -17,14 +17,10 @@ import {
     VisibilityOff,
     ArrowBack
 } from '@mui/icons-material';
-import { useToast } from '../contexts/ToastContext';
-import { adminAPI } from '../services/api';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { showSuccess, showError } = useToast();
-    
+
     const [formData, setFormData] = useState({
         newPassword: '',
         confirmPassword: ''
@@ -32,18 +28,7 @@ const ResetPassword = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [email, setEmail] = useState('');
-    const [otp, setOtp] = useState('');
 
-    useEffect(() => {
-        if (location.state?.email && location.state?.otp) {
-            setEmail(location.state.email);
-            setOtp(location.state.otp);
-        } else {
-            // If no email or OTP in state, redirect back to forgot password
-            navigate('/forgot-password');
-        }
-    }, [location.state, navigate]);
 
     const handleChange = (e) => {
         setFormData({
@@ -66,45 +51,32 @@ const ResetPassword = () => {
 
         // Validation
         if (!formData.newPassword || !formData.confirmPassword) {
-            showError('Please fill in all fields');
+            alert('Please fill in all fields');
             setLoading(false);
             return;
         }
 
         if (formData.newPassword.length < 6) {
-            showError('Password must be at least 6 characters long');
+            alert('Password must be at least 6 characters long');
             setLoading(false);
             return;
         }
 
         if (formData.newPassword !== formData.confirmPassword) {
-            showError('Passwords do not match');
+            alert('Passwords do not match');
             setLoading(false);
             return;
         }
 
-        try {
-            // Call the reset password API
-            const response = await adminAPI.resetPassword({
-                email,
-                otp,
-                newPassword: formData.newPassword
-            });
-            
-            showSuccess('Password reset successfully! You can now login with your new password.');
-            
-            // Navigate to login page
-            setTimeout(() => {
-                navigate('/login');
-            }, 2000);
+        // TODO: Add API call here
+        // Simulate success
+        alert('Password reset successfully! You can now login with your new password.');
 
-        } catch (error) {
-            console.error('Reset password error:', error);
-            const errorMessage = error.message || 'Failed to reset password. Please try again.';
-            showError(errorMessage);
-        } finally {
-            setLoading(false);
-        }
+        setTimeout(() => {
+            navigate('/login');
+        }, 2000);
+
+        setLoading(false);
     };
 
     return (
@@ -220,7 +192,7 @@ const ResetPassword = () => {
                         >
                             {loading ? 'Resetting Password...' : 'Reset Password'}
                         </Button>
-                        
+
                         <Box sx={{ textAlign: 'center', mt: 2 }}>
                             <Link
                                 component={RouterLink}

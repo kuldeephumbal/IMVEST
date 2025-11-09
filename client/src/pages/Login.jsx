@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
     Box,
     Card,
@@ -17,30 +17,16 @@ import {
     Visibility,
     VisibilityOff
 } from '@mui/icons-material';
-import { useToast } from '../contexts/ToastContext';
-import { adminAPI } from '../services/api';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { showSuccess, showError } = useToast();
-    
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
-    
-    const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
 
-    // Check if user is already logged in
-    useEffect(() => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const adminToken = localStorage.getItem('adminToken');
-        
-        if (isLoggedIn && adminToken) {
-            navigate('/dashboard');
-        }
-    }, [navigate]);
+    const [showPassword, setShowPassword] = useState(false);
 
 
 
@@ -51,68 +37,28 @@ const Login = () => {
         });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-
-        // Validation
-        if (!formData.email || !formData.password) {
-            showError('Please fill in all fields');
-            setLoading(false);
-            return;
-        }
-
-        if (!formData.email.includes('@')) {
-            showError('Please enter a valid email address');
-            setLoading(false);
-            return;
-        }
-
-        try {
-            // Call the API
-            const response = await adminAPI.login({
-                email: formData.email,
-                password: formData.password
-            });
-
-            // Store data in localStorage
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('adminToken', response.token);
-            localStorage.setItem('adminData', JSON.stringify(response.admin));
-            localStorage.setItem('userRole', response.admin.role);
-            localStorage.setItem('userEmail', response.admin.email);
-
-            // Show success message based on detected role
-            const roleLabels = {
-                super_admin: 'Super Admin',
-                admin: 'Admin',
-                manager: 'Manager'
-            };
-            
-            const roleLabel = roleLabels[response.admin.role] || 'Admin';
-            showSuccess(`Welcome back, ${response.admin.firstName}! You are logged in as ${roleLabel}`, {
-                autoClose: 3000
-            });
-
-            // Navigate to dashboard
-            setTimeout(() => {
-                navigate('/dashboard');
-            }, 1000);
-
-        } catch (error) {
-            console.error('Login error:', error);
-            
-            // Set loading to false immediately
-            setLoading(false);
-            
-            // Show error message
-            const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
-            showError(errorMessage);
-        }
-    };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Set localStorage items to simulate login
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('adminToken', 'mock-token-123');
+        localStorage.setItem('adminData', JSON.stringify({
+            firstName: 'Admin',
+            lastName: 'User',
+            email: formData.email || 'admin@imvest.com',
+            role: 'admin'
+        }));
+        localStorage.setItem('userRole', 'admin');
+        localStorage.setItem('userEmail', formData.email || 'admin@imvest.com');
+
+        // Navigate directly to dashboard
+        navigate('/dashboard');
     };
 
     return (
@@ -202,7 +148,6 @@ const Login = () => {
                             fullWidth
                             variant="contained"
                             size="large"
-                            disabled={loading}
                             sx={{
                                 mt: 3,
                                 mb: 2,
@@ -212,10 +157,9 @@ const Login = () => {
                                     background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)'
                                 }
                             }}
-                        >
-                            {loading ? 'Signing In...' : 'Sign In'}
+                        >Submit
                         </Button>
-                        
+
                         <Box sx={{ textAlign: 'right', mt: 1 }}>
                             <Link
                                 component={RouterLink}

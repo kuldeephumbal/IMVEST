@@ -14,13 +14,10 @@ import {
     Email,
     ArrowBack
 } from '@mui/icons-material';
-import { useToast } from '../contexts/ToastContext';
-import { adminAPI } from '../services/api';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
-    const { showSuccess, showError } = useToast();
-    
+
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -30,35 +27,24 @@ const ForgotPassword = () => {
 
         // Validation
         if (!email) {
-            showError('Please enter your email address');
+            alert('Please enter your email address');
             setLoading(false);
             return;
         }
 
         if (!email.includes('@')) {
-            showError('Please enter a valid email address');
+            alert('Please enter a valid email address');
             setLoading(false);
             return;
         }
 
-        try {
-            // Call the forgot password API
-            const response = await adminAPI.forgotPassword(email);
-            
-            showSuccess('OTP sent successfully to your email');
-            
-            // Navigate to OTP verification page with email
-            setTimeout(() => {
-                navigate('/verify-otp', { state: { email } });
-            }, 1000);
+        // TODO: Add API call here
+        // Simulate success
+        setTimeout(() => {
+            navigate('/verify-otp', { state: { email } });
+        }, 1000);
 
-        } catch (error) {
-            console.error('Forgot password error:', error);
-            const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
-            showError(errorMessage);
-        } finally {
-            setLoading(false);
-        }
+        setLoading(false);
     };
 
     return (
@@ -136,7 +122,7 @@ const ForgotPassword = () => {
                         >
                             {loading ? 'Sending OTP...' : 'Send OTP'}
                         </Button>
-                        
+
                         <Box sx={{ textAlign: 'center', mt: 2 }}>
                             <Link
                                 component={RouterLink}

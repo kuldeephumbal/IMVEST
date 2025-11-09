@@ -21,23 +21,16 @@ import {
     Menu as MenuIcon,
     Notifications,
     Settings,
-    Mail,
-    Brightness4,
-    Brightness7,
     Person,
     Logout,
-    AccountCircle,
     AdminPanelSettings,
     SupervisedUserCircle
 } from '@mui/icons-material';
-import { useToast } from '../contexts/ToastContext';
-import { adminAPI } from '../services/api';
 
 const Header = ({ onMenuClick, sidebarOpen }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const navigate = useNavigate();
-    const { showSuccess, showError } = useToast();
     const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
     const [adminData, setAdminData] = useState(null);
 
@@ -63,37 +56,17 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
 
     const handleLogout = async () => {
         handleProfileMenuClose();
-        
-        try {
-            // Call logout API
-            await adminAPI.logout();
-            
-            // Clear all stored data
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminData');
-            localStorage.removeItem('userRole');
-            localStorage.removeItem('userEmail');
-            
-            showSuccess('Successfully logged out');
-            
-            // Navigate to login
-            setTimeout(() => {
-                navigate('/login');
-            }, 1000);
-            
-        } catch (error) {
-            console.error('Logout error:', error);
-            // Even if API call fails, clear local data
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminData');
-            localStorage.removeItem('userRole');
-            localStorage.removeItem('userEmail');
-            
-            showError('Error during logout, but you have been logged out locally');
-            navigate('/login');
-        }
+
+        // TODO: Add API call here
+        // Clear all stored data
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminData');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userEmail');
+
+        // Navigate to login
+        navigate('/login');
     };
 
     const handleProfile = () => {
@@ -157,14 +130,14 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                             <Chip
                                 icon={
                                     adminData.role === 'super_admin' ? <AdminPanelSettings /> :
-                                    adminData.role === 'manager' ? <SupervisedUserCircle /> :
-                                    <Person />
+                                        adminData.role === 'manager' ? <SupervisedUserCircle /> :
+                                            <Person />
                                 }
                                 label={
                                     adminData.role === 'super_admin' ? 'Super Admin' :
-                                    adminData.role === 'admin' ? 'Admin' :
-                                    adminData.role === 'manager' ? 'Manager' :
-                                    adminData.role.charAt(0).toUpperCase() + adminData.role.slice(1)
+                                        adminData.role === 'admin' ? 'Admin' :
+                                            adminData.role === 'manager' ? 'Manager' :
+                                                adminData.role.charAt(0).toUpperCase() + adminData.role.slice(1)
                                 }
                                 size="small"
                                 sx={{
@@ -191,11 +164,11 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                         sx={{ p: 0.5 }}
                     >
                         <Avatar
-                            sx={{ 
-                                width: 32, 
+                            sx={{
+                                width: 32,
                                 height: 32,
                                 backgroundColor: adminData?.role === 'super_admin' ? '#d32f2f' :
-                                                adminData?.role === 'manager' ? '#388e3c' : '#1976d2'
+                                    adminData?.role === 'manager' ? '#388e3c' : '#1976d2'
                             }}
                         >
                             {adminData ? `${adminData.firstName.charAt(0)}${adminData.lastName.charAt(0)}` : 'A'}
@@ -222,8 +195,8 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                             <ListItemIcon>
                                 <Person fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText 
-                                primary="Profile" 
+                            <ListItemText
+                                primary="Profile"
                                 secondary={adminData ? `${adminData.firstName} ${adminData.lastName}` : ''}
                             />
                         </MenuItem>

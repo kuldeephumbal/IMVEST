@@ -14,14 +14,11 @@ import {
     Security,
     ArrowBack
 } from '@mui/icons-material';
-import { useToast } from '../contexts/ToastContext';
-import { adminAPI } from '../services/api';
 
 const VerifyOTP = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { showSuccess, showError } = useToast();
-    
+
     const [otp, setOtp] = useState('');
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
@@ -41,49 +38,31 @@ const VerifyOTP = () => {
 
         // Validation
         if (!otp) {
-            showError('Please enter the OTP');
+            alert('Please enter the OTP');
             setLoading(false);
             return;
         }
 
         if (otp.length !== 6) {
-            showError('OTP must be 6 digits');
+            alert('OTP must be 6 digits');
             setLoading(false);
             return;
         }
 
-        try {
-            // Call the verify OTP API
-            const response = await adminAPI.verifyOTP({ email, otp });
-            
-            showSuccess('OTP verified successfully');
-            
-            // Navigate to reset password page with email and OTP
-            setTimeout(() => {
-                navigate('/reset-password', { state: { email, otp } });
-            }, 1000);
+        // TODO: Add API call here
+        // Simulate success
+        setTimeout(() => {
+            navigate('/reset-password', { state: { email, otp } });
+        }, 1000);
 
-        } catch (error) {
-            console.error('OTP verification error:', error);
-            const errorMessage = error.message || 'Invalid OTP. Please try again.';
-            showError(errorMessage);
-        } finally {
-            setLoading(false);
-        }
+        setLoading(false);
     };
 
     const handleResendOTP = async () => {
         setLoading(true);
-        try {
-            await adminAPI.forgotPassword(email);
-            showSuccess('OTP resent successfully');
-        } catch (error) {
-            console.error('Resend OTP error:', error);
-            const errorMessage = error.message || 'Failed to resend OTP. Please try again.';
-            showError(errorMessage);
-        } finally {
-            setLoading(false);
-        }
+        // TODO: Add API call here
+        alert('OTP resent successfully');
+        setLoading(false);
     };
 
     return (
@@ -164,7 +143,7 @@ const VerifyOTP = () => {
                         >
                             {loading ? 'Verifying...' : 'Verify OTP'}
                         </Button>
-                        
+
                         <Box sx={{ textAlign: 'center', mt: 2 }}>
                             <Button
                                 variant="text"
@@ -181,7 +160,7 @@ const VerifyOTP = () => {
                                 Resend OTP
                             </Button>
                         </Box>
-                        
+
                         <Box sx={{ textAlign: 'center', mt: 2 }}>
                             <Link
                                 component={RouterLink}
