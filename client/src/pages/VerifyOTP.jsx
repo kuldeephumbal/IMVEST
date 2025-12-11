@@ -93,7 +93,7 @@ const VerifyOTP = () => {
                                 mb: 1
                             }}
                         >
-                            IMVEST
+                            CUST
                         </Typography>
                         <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
                             Verify OTP

@@ -11,7 +11,7 @@ import Sidebar from './components/Sidebar';
 import backgroundImage from './assets/img/img01.jpg';
 
 const App = ({ children }) => {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(true);
     const location = useLocation();
 
@@ -28,13 +28,13 @@ const App = ({ children }) => {
 
     const theme = createTheme({
         palette: {
-            mode: isDarkMode ? 'dark' : 'light',
+            mode: 'dark',
             background: {
-                default: isDarkMode ? '#0f172a' : '#f8fafc',
-                paper: isDarkMode ? '#1e293b' : '#ffffff'
+                default: '#0f172a',
+                paper: '#1e293b'
             },
             text: {
-                primary: isDarkMode ? '#ffffff' : '#1e293b'
+                primary: '#ffffff'
             }
         },
         typography: {
@@ -77,7 +77,9 @@ const App = ({ children }) => {
                         flexGrow: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        minHeight: '100vh'
+                        minHeight: '100vh',
+                        width: '100%',
+                        ml: 0
                     }}
                 >
                     <Header

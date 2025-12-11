@@ -20,7 +20,6 @@ import {
     Dashboard,
     ExpandLess,
     ExpandMore,
-    Description,
     Close,
     Message,
 } from '@mui/icons-material';
@@ -91,11 +90,6 @@ const Sidebar = ({ open, onClose }) => {
             title: 'Dashboard',
             icon: <Dashboard />,
             path: '/dashboard'
-        },
-        {
-            title: 'Contracts & Documents',
-            icon: <Description />,
-            path: '/contracts'
         },
         {
             title: 'Communication System',
@@ -278,7 +272,7 @@ const Sidebar = ({ open, onClose }) => {
                     fontWeight: '700',
                     fontSize: '1.3rem',
                 }}>
-                    IMVEST
+                    CUST
                 </Typography>
                 {isMobile && (
                     <IconButton onClick={onClose} sx={{ color: 'inherit' }}>

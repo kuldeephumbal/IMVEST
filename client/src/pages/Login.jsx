@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink} from 'react-router-dom';
 import {
     Box,
     Card,
@@ -19,7 +19,6 @@ import {
 } from '@mui/icons-material';
 
 const Login = () => {
-    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -40,25 +39,6 @@ const Login = () => {
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        // Set localStorage items to simulate login
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('adminToken', 'mock-token-123');
-        localStorage.setItem('adminData', JSON.stringify({
-            firstName: 'Admin',
-            lastName: 'User',
-            email: formData.email || 'admin@imvest.com',
-            role: 'admin'
-        }));
-        localStorage.setItem('userRole', 'admin');
-        localStorage.setItem('userEmail', formData.email || 'admin@imvest.com');
-
-        // Navigate directly to dashboard
-        navigate('/dashboard');
     };
 
     return (
@@ -89,14 +69,14 @@ const Login = () => {
                                 mb: 1
                             }}
                         >
-                            IMVEST
+                            CUST
                         </Typography>
                         <Typography variant="h6" color="text.secondary">
                             Admin Login
                         </Typography>
                     </Box>
 
-                    <form onSubmit={handleSubmit}>
+                    <form>
                         <TextField
                             fullWidth
                             name="email"

@@ -11,7 +11,6 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import ContractAndDocuments from './pages/ContractAndDocuments';
 import CommunicationSystem from './pages/CommunicationSystem';
 
 createRoot(document.getElementById('root')).render(
@@ -26,7 +25,6 @@ createRoot(document.getElementById('root')).render(
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/contracts" element={<ContractAndDocuments />} />
             <Route path="/communication" element={<CommunicationSystem />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />

@@ -100,21 +100,22 @@ const Dashboard = () => {
 
     return (
       <Paper sx={{
-        p: 3,
-        height: 400,
+        p: { xs: 1.5, sm: 3 },
+        height: { xs: 320, sm: 400 },
         background: 'rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(20px)',
         border: '1px solid rgba(255, 255, 255, 0.2)',
-        borderRadius: '20px',
+        borderRadius: { xs: '16px', sm: '20px' },
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        width: '100%',
         '&:hover': {
           transform: 'translateY(-2px)',
           transition: 'all 0.3s ease',
           boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)'
         }
       }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 1, sm: 2 } }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: { xs: '0.9rem', sm: '1.25rem' } }}>
             {title}
           </Typography>
           <Button
@@ -122,12 +123,12 @@ const Dashboard = () => {
             size="small"
             href={docsLink}
             target="_blank"
-            sx={{ textTransform: 'none' }}
+            sx={{ textTransform: 'none', display: { xs: 'none', sm: 'inline-flex' } }}
           >
             docs
           </Button>
         </Box>
-        <Box sx={{ height: 300 }}>
+        <Box sx={{ height: { xs: 265, sm: 300 }, width: '100%' }}>
           {getChartComponent()}
         </Box>
       </Paper>
@@ -192,12 +193,12 @@ const Dashboard = () => {
         background: `linear-gradient(135deg, ${stat.color}15 0%, ${stat.chartColor}25 100%)`,
         backdropFilter: 'blur(20px)',
         border: '1px solid rgba(255, 255, 255, 0.2)',
-        borderRadius: '20px',
+        borderRadius: { xs: '16px', sm: '20px' },
         color: 'white',
         position: 'relative',
         overflow: 'hidden',
-        height: 140,
-        minWidth: 280,
+        height: { xs: 120, sm: 140 },
+        width: '100%',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
         '&::before': {
           content: '""',
@@ -216,15 +217,15 @@ const Dashboard = () => {
         }
       }}
     >
-      <CardContent sx={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <CardContent sx={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flex: 1 }}>
-          <Box sx={{ flex: 1, minWidth: 0, pr: 1 }}>
+          <Box sx={{ flex: 1, minWidth: 0, pr: 0.5 }}>
             <Typography
               variant="h4"
               sx={{
                 fontWeight: 'bold',
                 mb: 0.5,
-                fontSize: { xs: '1.5rem', sm: '2rem' },
+                fontSize: { xs: '1.25rem', sm: '2rem' },
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis'
@@ -236,7 +237,7 @@ const Dashboard = () => {
               variant="body2"
               sx={{
                 opacity: 0.9,
-                fontSize: '0.875rem',
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis'
@@ -244,19 +245,19 @@ const Dashboard = () => {
             >
               {stat.subtitle}
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: { xs: 0.5, sm: 1 } }}>
               {stat.trend === 'up' ? (
-                <TrendingUp sx={{ fontSize: 16, mr: 0.5 }} />
+                <TrendingUp sx={{ fontSize: { xs: 14, sm: 16 }, mr: 0.5 }} />
               ) : (
-                <TrendingDown sx={{ fontSize: 16, mr: 0.5 }} />
+                <TrendingDown sx={{ fontSize: { xs: 14, sm: 16 }, mr: 0.5 }} />
               )}
-              <Typography variant="caption">
+              <Typography variant="caption" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
                 ({stat.change})
               </Typography>
             </Box>
           </Box>
-          <IconButton sx={{ color: 'white', flexShrink: 0 }}>
-            <MoreVert />
+          <IconButton sx={{ color: 'white', flexShrink: 0, p: { xs: 0.5, sm: 1 } }}>
+            <MoreVert sx={{ fontSize: { xs: 18, sm: 24 } }} />
           </IconButton>
         </Box>
 
@@ -307,19 +308,28 @@ const Dashboard = () => {
     <>
       <CustomBreadcrumb />
 
-      <div className="container-fluid">
-        <div className="row">
+      <Box sx={{ width: '100%', px: { xs: 0.5, sm: 2 }, py: { xs: 1, sm: 2 } }}>
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            sm: 'repeat(2, 1fr)',
+            lg: 'repeat(4, 1fr)'
+          },
+          gap: { xs: 1.5, sm: 2 },
+          mb: { xs: 2, sm: 3 }
+        }}>
           {stats.map((stat, index) => (
-            <div className="col-12 col-sm-6 col-md-3 mb-4" key={index}>
-              <StatCard stat={stat} />
-            </div>
+            <StatCard key={index} stat={stat} />
           ))}
-        </div>
-      </div>
+        </Box>
 
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 col-md-8 mb-3">
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', lg: 'repeat(12, 1fr)' },
+          gap: { xs: 1.5, sm: 2 }
+        }}>
+          <Box sx={{ gridColumn: { xs: '1', lg: 'span 8' } }}>
             <ChartComponent
               type="bar"
               data={chartData.barChart}
@@ -342,8 +352,8 @@ const Dashboard = () => {
                 }
               }}
             />
-          </div>
-          <div className="col-12 col-md-4 mb-3">
+          </Box>
+          <Box sx={{ gridColumn: { xs: '1', lg: 'span 4' } }}>
             <ChartComponent
               type="doughnut"
               data={chartData.doughnutChart}
@@ -360,8 +370,8 @@ const Dashboard = () => {
                 }
               }}
             />
-          </div>
-          <div className="col-12 col-md-4 mb-3">
+          </Box>
+          <Box sx={{ gridColumn: { xs: '1', lg: 'span 4' } }}>
             <ChartComponent
               type="pie"
               data={chartData.pieChart}
@@ -378,8 +388,8 @@ const Dashboard = () => {
                 }
               }}
             />
-          </div>
-          <div className="col-12 col-md-8 mb-3">
+          </Box>
+          <Box sx={{ gridColumn: { xs: '1', lg: 'span 8' } }}>
             <ChartComponent
               type="line"
               data={chartData.lineChart}
@@ -402,9 +412,9 @@ const Dashboard = () => {
                 }
               }}
             />
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     </>
   );
 };

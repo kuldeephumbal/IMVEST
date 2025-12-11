@@ -171,7 +171,7 @@ const Header = ({ onMenuClick, sidebarOpen }) => {
                                     adminData?.role === 'manager' ? '#388e3c' : '#1976d2'
                             }}
                         >
-                            {adminData ? `${adminData.firstName.charAt(0)}${adminData.lastName.charAt(0)}` : 'A'}
+                            <Person fontSize="small" />
                         </Avatar>
                     </IconButton>
 

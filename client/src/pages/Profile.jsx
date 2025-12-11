@@ -43,7 +43,7 @@ const Profile = () => {
     const [profileData, setProfileData] = useState({
         firstName: 'Admin',
         lastName: 'User',
-        email: 'admin@imvest.com',
+        email: 'admin@cust.com',
         mobileNumber: '+1 234 567 8900',
         avatar: ''
     });
